@@ -1,41 +1,35 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtPositioning
-import QtLocation
+
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 1000
+    height: 800
     title: qsTr("VDT2026")
 
-    menuBar: AppMenuBar {}
+    menuBar: AppMenuBar {
+        id: menuBar
+    }
 
-    header: ToolBar {
-        RowLayout {
-            Label {
-                text: "Hello"
+    header: AppToolBar {
+        id: toolBar
+    }
+
+    footer: AppStatusBar {
+        id: statusBar
+    }
+
+    MainMap {
+        id: mainMap
+
+        Connections {
+            target: mainMap.map
+
+            function onZoomLevelChanged(level) {
+                statusBar.zoomLevel.text = "Zoom: %1x".arg(level.toFixed(2))
             }
         }
-    }
-
-
-    footer: ToolBar {
-
-    }
-
-    Plugin {
-        id: mapPlugin
-        name: "osm"
-    }
-
-    Map {
-        id: map
-        anchors.fill: parent
-        plugin: mapPlugin
-        center: QtPositioning.coordinate(59.91, 10.75) // Oslo
-        zoomLevel: 14
-        property geoCoordinate startCentroid
     }
 }
