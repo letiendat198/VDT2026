@@ -6,8 +6,6 @@ ToolBar {
     anchors.right: parent.right
     anchors.left: parent.left
 
-    property alias zoomLevel: zoomLevelLbl
-
     RowLayout {
         anchors.fill: parent
 
@@ -38,5 +36,9 @@ ToolBar {
             id: zoomLevelLbl
             text: "Zoom: "
         }
+    }
+
+    function setZoomLevel(level: real) {
+        zoomLevelLbl.text = "Zoom: %1x".arg(level.toFixed(2))
     }
 }

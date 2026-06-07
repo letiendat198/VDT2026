@@ -7,6 +7,7 @@ Item {
     anchors.fill: parent
 
     property alias map: map
+    property alias selectionHandler: selectionHandler
 
     Plugin {
         id: mapPlugin
@@ -41,8 +42,30 @@ Item {
             onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
         }
 
+        MapShipView {
+            map: map
+        }
+
+        MapSelectionHandler {
+            id: selectionHandler
+            dragHandler: drag
+        }
+
         Component.onCompleted: {
             zoomLevelChanged(zoomLevel)
         }
+
+    }
+
+    function zoomIn() {
+        map.zoomLevel += 0.5
+    }
+
+    function zoomOut() {
+        map.zoomLevel -= 0.5
+    }
+
+    function setSelectionEnabled(enabled: bool) {
+        selectionHandler.enabled = enabled
     }
 }

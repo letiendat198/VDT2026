@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import "components"
 
 ApplicationWindow {
     visible: true
@@ -15,21 +16,40 @@ ApplicationWindow {
 
     header: AppToolBar {
         id: toolBar
+
+        // Connections {
+        //     target: mainMap.selectionHandler
+        //     function onEnabledChanged() {
+        //         toolBar.selectionRect.checked = mainMap.selectionHandler.enabled
+        //     }
+        // }
     }
 
     footer: AppStatusBar {
         id: statusBar
+
+        Connections {
+            target: mainMap.map
+            function onZoomLevelChanged(level) { statusBar.setZoomLevel(level) }
+        }
     }
 
     MainMap {
         id: mainMap
 
         Connections {
-            target: mainMap.map
+            target: toolBar.zoomIn
+            function onPressed() { mainMap.zoomIn() }
+        }
 
-            function onZoomLevelChanged(level) {
-                statusBar.zoomLevel.text = "Zoom: %1x".arg(level.toFixed(2))
-            }
+        Connections {
+            target: toolBar.zoomOut
+            function onPressed() { mainMap.zoomOut() }
+        }
+
+        Connections {
+            target: toolBar.selectionRect
+            function onCheckedChanged() { mainMap.setSelectionEnabled(toolBar.selectionRect.checked) }
         }
     }
 }
