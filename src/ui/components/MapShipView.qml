@@ -51,15 +51,18 @@ Item {
                     anchors.horizontalCenter: shipMarker.horizontalCenter
                     anchors.bottomMargin: 10
 
-                    width: 100
-                    height: 50
+                    width: 200
+                    height: 100
+                    color: Qt.rgba(1, 1, 1, 0.5)
                     visible: hoverHandler.hovered ? true : false
 
                     ColumnLayout {
-                        width: parent.width
-                        height: parent.height
+                        anchors.fill: parent
 
                         Text {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignTop
+
                             text: "Hello from the other sidee"
                             wrapMode: Text.Wrap
                         }

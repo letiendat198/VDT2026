@@ -12,4 +12,3 @@ qt_standard_project_setup(REQUIRES 6.10)
 
 add_subdirectory(src)
 add_subdirectory(src/ui)
-

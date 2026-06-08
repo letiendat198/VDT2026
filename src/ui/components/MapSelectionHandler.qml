@@ -7,7 +7,6 @@ import QtPositioning
 // It only needs to show selection preview, so just use normal rectangle/circle or canvas overlay
 // No need to use MapItem
 Item {
-    id: selectionHandler
     required property DragHandler dragHandler
 
     property bool enabled: false
@@ -52,8 +51,6 @@ Item {
             startPoint = null // This actually put it to point(0,0)
             endPoint = null
             selectionPreview.requestPaint()
-
-            selectionHandler.enabled = false
         }
     }
 

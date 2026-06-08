@@ -1,5 +1,7 @@
 qt_add_executable(appVDT2026
         main.cpp
+        socket/Server.cpp
+        socket/ClientHandler.h socket/ClientHandler.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -13,13 +15,14 @@ set_target_properties(appVDT2026 PROPERTIES
         WIN32_EXECUTABLE TRUE
 )
 
-# Test
-find_package(Qt6 REQUIRED COMPONENTS Location)
-find_package(Qt6 REQUIRED COMPONENTS Positioning)
+# Qt stuffs
+find_package(Qt6 REQUIRED COMPONENTS Network)
 
 target_link_libraries(appVDT2026
-        PRIVATE Qt6::Quick
+        PRIVATE Qt6::Quick Qt6::Network
 )
+
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 
 install(TARGETS appVDT2026
     BUNDLE DESTINATION .

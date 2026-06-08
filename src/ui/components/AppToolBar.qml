@@ -30,31 +30,49 @@ ToolBar {
 
         ToolSeparator {}
 
-        ToolButton {
-            id: selectionRectBtn
-            text: qsTr("Rect")
-            checkable: true
-
-            ToolTip.visible: hovered
-            ToolTip.text: qsTr("Select a rectangular region")
+        ButtonGroup {
+            buttons: toolButtons.children
         }
 
-        ToolButton {
-            id: selectionCircleBtn
-            text: qsTr("Circle")
-            checkable: true
+        RowLayout {
+            id: toolButtons
 
-            ToolTip.visible: hovered
-            ToolTip.text: qsTr("Select a circular region")
-        }
+            ToolButton {
+                id: panBtn
+                text: qsTr("Pan")
+                checkable: true
+                checked: true
 
-        ToolButton {
-            id: selectionPolygonBtn
-            text: qsTr("Polygon")
-            checkable: true
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Pan view")
+            }
 
-            ToolTip.visible: hovered
-            ToolTip.text: qsTr("Select a polygonal region")
+            ToolButton {
+                id: selectionRectBtn
+                text: qsTr("Rect")
+                checkable: true
+
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Select a rectangular region")
+            }
+
+            ToolButton {
+                id: selectionCircleBtn
+                text: qsTr("Circle")
+                checkable: true
+
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Select a circular region")
+            }
+
+            ToolButton {
+                id: selectionPolygonBtn
+                text: qsTr("Polygon")
+                checkable: true
+
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Select a polygonal region")
+            }
         }
     }
 
