@@ -18,14 +18,26 @@ void ClientHandler::addClient(QTcpSocket *socket) {
         onClientError(clientPort, error);
     });
 
-    m_mapClient.insert(clientPort, socket);
+    connect(socket, &QTcpSocket::readyRead, this, [this, clientPort](){
+        onClientIncoming(clientPort);
+    });
+
+    m_mapClient.insert(clientPort, QPointer(socket));
+}
+
+void ClientHandler::onClientIncoming(int key) {
+    QPointer<QTcpSocket> client = m_mapClient[key];
+
+    if (!client) return;
+
+
 }
 
 void ClientHandler::onClientDisconnected(int key) {
-    QTcpSocket *client = m_mapClient.take(key);
+    QPointer<QTcpSocket> client = m_mapClient.take(key);
 
     if (!client) {
-        qDebug() << "Disconnected client does not exist in map";
+        qDebug() << "Disconnected client somehow does not exist in map";
         return;
     }
 

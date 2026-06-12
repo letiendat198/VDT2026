@@ -2,6 +2,13 @@ qt_add_executable(appVDT2026
         main.cpp
         socket/Server.cpp
         socket/ClientHandler.h socket/ClientHandler.cpp
+        socket/runnable/ReadHandler.h socket/runnable/ReadHandler.cpp
+        model/ShipModel.h model/ShipModel.cpp
+        dao/ShipDAO.h dao/ShipDAO.cpp
+        dao/BaseDAO.h dao/BaseDAO.cpp
+        model/ShipRadarInfoModel.h model/ShipRadarInfoModel.cpp
+        dao/ShipRadarInfoDAO.h dao/ShipRadarInfoDAO.cpp
+        utils/WKBConverter.h utils/WKBConverter.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -17,9 +24,10 @@ set_target_properties(appVDT2026 PROPERTIES
 
 # Qt stuffs
 find_package(Qt6 REQUIRED COMPONENTS Network)
+find_package(Qt6 REQUIRED COMPONENTS Sql)
 
 target_link_libraries(appVDT2026
-        PRIVATE Qt6::Quick Qt6::Network
+        PRIVATE Qt6::Quick Qt6::Network Qt6::Sql
 )
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")

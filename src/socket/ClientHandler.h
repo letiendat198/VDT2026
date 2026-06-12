@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMap>
 #include <QTcpSocket>
+#include <QPointer>
 
 class ClientHandler : public QObject
 {
@@ -33,11 +34,12 @@ public:
 private slots:
     void onClientDisconnected(int key);
     void onClientError(int key, QAbstractSocket::SocketError error);
+    void onClientIncoming(int key);
     // TODO: Handle clear all clients when socket server closes
 
 private:
-    // Identify by server socket port, maybe bad :D
-    QMap<int, QTcpSocket*> m_mapClient{};
+    // Identify by server socket port, may regret it later :D
+    QMap<int, QPointer<QTcpSocket>> m_mapClient{};
 };
 
 #endif // CLIENTHANDLER_H
