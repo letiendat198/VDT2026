@@ -9,10 +9,11 @@ class ShipRadarInfoDAO : public BaseDAO
 public:
     ShipRadarInfoDAO();
 
-    bool insertByShipId(const QString &id, ShipRadarInfoModel info);
+    bool insert(ShipRadarInfoModel info);
 
-    ShipRadarInfoModel getLastestByShipId(const QString &id);
-    QList<ShipRadarInfoModel> getFromTimeByShipId(const QString &id, const QDateTime &timestamp);
+    QList<ShipRadarInfoModel> getAllLastest();
+    ShipRadarInfoModel getLastestByShipId(qint64 id);
+    QList<ShipRadarInfoModel> getFromTimeByShipId(qint64 id, const QDateTime &timestamp);
 };
 
 #endif // SHIPRADARINFODAO_H

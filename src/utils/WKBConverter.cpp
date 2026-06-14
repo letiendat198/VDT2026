@@ -31,7 +31,7 @@ Coordinate WKBConverter::toCoord(){
 }
 
 QPointF WKBConverter::toQPointF() {
-    Coordinate coord = toCoord();
+    Coordinate coord = this->toCoord();
     // TODO: point in QML may work in lat/long? If shit breaks, it's probably this
     return QPointF(coord.longitude, coord.latitude);
 }
@@ -45,7 +45,7 @@ QPolygonF WKBConverter::toQPolygonF() {
         quint32 numPoints;
         m_ds >> numPoints;
 
-        while(--numPoints) poly.append(toQPointF());
+        while(--numPoints) poly.append(this->toQPointF());
     }
 
     return poly;

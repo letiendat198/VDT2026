@@ -3,12 +3,14 @@ qt_add_executable(appVDT2026
         socket/Server.cpp
         socket/ClientHandler.h socket/ClientHandler.cpp
         socket/runnable/ReadHandler.h socket/runnable/ReadHandler.cpp
-        model/ShipModel.h model/ShipModel.cpp
-        dao/ShipDAO.h dao/ShipDAO.cpp
+
+
         dao/BaseDAO.h dao/BaseDAO.cpp
-        model/ShipRadarInfoModel.h model/ShipRadarInfoModel.cpp
+        model/ShipRadarInfoModel.h
         dao/ShipRadarInfoDAO.h dao/ShipRadarInfoDAO.cpp
         utils/WKBConverter.h utils/WKBConverter.cpp
+        service/ShipService.h service/ShipService.cpp
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
