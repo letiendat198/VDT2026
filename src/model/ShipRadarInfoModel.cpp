@@ -4,7 +4,7 @@ ShipRadarInfoModel::ShipRadarInfoModel() {
 
 }
 
-ShipRadarInfoModel::ShipRadarInfoModel(qint64 shipId, const Coordinate &coord, qreal angle, qreal speed, const QDateTime &timestamp)
+ShipRadarInfoModel::ShipRadarInfoModel(qint64 shipId, const QGeoCoordinate &coord, qreal angle, qreal speed, const QDateTime &timestamp)
     : m_shipId(shipId),
     m_coord(coord),
     m_angle(std::move(angle)),
@@ -12,12 +12,12 @@ ShipRadarInfoModel::ShipRadarInfoModel(qint64 shipId, const Coordinate &coord, q
     m_timestamp(timestamp)
 {}
 
-Coordinate ShipRadarInfoModel::coord() const
+QGeoCoordinate ShipRadarInfoModel::coord() const
 {
     return m_coord;
 }
 
-void ShipRadarInfoModel::setCoord(const Coordinate &newCoord)
+void ShipRadarInfoModel::setCoord(const QGeoCoordinate &newCoord)
 {
     m_coord = newCoord;
 }
@@ -64,8 +64,8 @@ void ShipRadarInfoModel::setShipId(qint64 newShipId)
 
 QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo) {
     stream << shipInfo.shipId();
-    stream << shipInfo.coord().latitude;
-    stream << shipInfo.coord().longitude;
+    stream << shipInfo.coord().latitude();
+    stream << shipInfo.coord().longitude();
     stream << shipInfo.angle();
     stream << shipInfo.speed();
     stream << shipInfo.timestamp();
@@ -75,19 +75,20 @@ QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo)
 
 QDataStream &operator>>(QDataStream &stream, ShipRadarInfoModel &shipInfo) {
     qint64 shipId;
-    Coordinate coord;
+    qreal lat;
+    qreal log;
     qreal angle;
     qreal speed;
     QDateTime timestamp;
 
     stream >> shipId;
-    stream >> coord.latitude;
-    stream >> coord.longitude;
+    stream >> lat;
+    stream >> log;
     stream >> angle;
     stream >> speed;
     stream >> timestamp;
 
-    shipInfo = ShipRadarInfoModel(shipId, coord, angle, speed, timestamp);
+    shipInfo = ShipRadarInfoModel(shipId, QGeoCoordinate(lat, log), angle, speed, timestamp);
 
     return stream;
 }

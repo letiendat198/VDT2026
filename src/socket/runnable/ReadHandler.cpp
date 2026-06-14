@@ -1,6 +1,6 @@
 #include "ReadHandler.h"
 #include "dao/ShipRadarInfoDAO.h"
-#include "model/ShipModel.h"
+#include "model/ShipRadarInfoModel.h"
 
 #include <QDataStream>
 

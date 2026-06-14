@@ -3,16 +3,16 @@
 
 #include <QSqlQuery>
 
-ShipRadarInfoDAO::ShipRadarInfoDAO() {}
+ShipRadarInfoDAO::ShipRadarInfoDAO() : BaseDAO() {}
 
 bool ShipRadarInfoDAO::insert(ShipRadarInfoModel info) {
     QSqlQuery query(m_db);
 
-    query.prepare("INSERT INTO ship_radar_info (coordinate, speed, angle, timestamp, ship_id) VALUES('SRID=4326;POINT(?, ?)', ?, ?, ?, ?);");
+    query.prepare("INSERT INTO ship_radar_info (coordinate, speed, angle, timestamp, ship_id) VALUES('SRID=4326;POINT(? ?)', ?, ?, ?, ?);");
 
     // https://postgis.net/documentation/tips/lon-lat-or-lat-lon/
-    query.addBindValue(info.coord().longitude);
-    query.addBindValue(info.coord().latitude);
+    query.addBindValue(info.coord().longitude());
+    query.addBindValue(info.coord().latitude());
     query.addBindValue(info.speed());
     query.addBindValue(info.angle());
     query.addBindValue(info.timestamp());
@@ -35,7 +35,7 @@ QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastest() {
     while (query.next()) {
         ShipRadarInfoModel model;
         model.setShipId(query.value(4).toLongLong());
-        model.setCoord(WKBConverter(query.value(0).toString()).toCoord());
+        model.setCoord(WKBConverter(query.value(0).toByteArray()).toCoord());
         model.setSpeed(query.value(1).toReal());
         model.setAngle(query.value(2).toReal());
         model.setTimestamp(query.value(3).toDateTime());
@@ -58,7 +58,7 @@ ShipRadarInfoModel ShipRadarInfoDAO::getLastestByShipId(qint64 id) {
 
     while (query.next()) {
         model.setShipId(id);
-        model.setCoord(WKBConverter(query.value(0).toString()).toCoord());
+        model.setCoord(WKBConverter(query.value(0).toByteArray()).toCoord());
         model.setSpeed(query.value(1).toReal());
         model.setAngle(query.value(2).toReal());
         model.setTimestamp(query.value(3).toDateTime());
@@ -82,7 +82,7 @@ QList<ShipRadarInfoModel> ShipRadarInfoDAO::getFromTimeByShipId(qint64 id, const
     while (query.next()) {
         ShipRadarInfoModel model;
         model.setShipId(id);
-        model.setCoord(WKBConverter(query.value(0).toString()).toCoord());
+        model.setCoord(WKBConverter(query.value(0).toByteArray()).toCoord());
         model.setSpeed(query.value(1).toReal());
         model.setAngle(query.value(2).toReal());
         model.setTimestamp(query.value(3).toDateTime());

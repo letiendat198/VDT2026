@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QByteArray>
-#include <model/ShipRadarInfoModel.h>
+#include <QGeoCoordinate>
 
 // https://libgeos.org/specifications/wkb/#standard-wkb
 enum WKBGeometryType {
@@ -21,15 +21,14 @@ enum WKBGeometryType {
 class WKBConverter
 {
 public:
-    WKBConverter(const QString &bin);
+    WKBConverter(const QByteArray &bin);
 
-    Coordinate toCoord();
+    QGeoCoordinate toCoord();
     QPointF toQPointF();
     QPolygonF toQPolygonF();
 private:
     bool m_littleEdian{};
     WKBGeometryType m_type{};
-    QByteArray m_bytes{};
     QDataStream m_ds{};
 };
 

@@ -1,16 +1,28 @@
 qt_add_executable(appVDT2026
         main.cpp
         socket/Server.cpp
-        socket/ClientHandler.h socket/ClientHandler.cpp
-        socket/runnable/ReadHandler.h socket/runnable/ReadHandler.cpp
-
-
+        socket/ClientHandler.cpp
+        socket/runnable/ReadHandler.cpp
+        utils/WKBConverter.cpp
+        model/ShipRadarInfoModel.cpp
         dao/BaseDAO.h dao/BaseDAO.cpp
-        model/ShipRadarInfoModel.h
-        dao/ShipRadarInfoDAO.h dao/ShipRadarInfoDAO.cpp
-        utils/WKBConverter.h utils/WKBConverter.cpp
-        service/ShipService.h service/ShipService.cpp
+        dao/ShipRadarInfoDAO.cpp
+        provider/ShipRadarInfoProvider.cpp
+)
 
+qt_add_qml_module(appVDT2026
+    URI VDT2026
+    QML_FILES
+        ui/Main.qml
+        ui/components/AppMenuBar.qml
+        ui/components/AppStatusBar.qml
+        ui/components/AppToolBar.qml
+        ui/components/MainMap.qml
+        ui/components/MapSelectionHandler.qml
+        ui/components/MapShipView.qml
+    SOURCES
+        provider/ShipRadarInfoProvider.cpp provider/ShipRadarInfoProvider.h
+        model/ShipRadarInfoModel.cpp model/ShipRadarInfoModel.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -27,12 +39,17 @@ set_target_properties(appVDT2026 PROPERTIES
 # Qt stuffs
 find_package(Qt6 REQUIRED COMPONENTS Network)
 find_package(Qt6 REQUIRED COMPONENTS Sql)
+find_package(Qt6 REQUIRED COMPONENTS Positioning)
 
 target_link_libraries(appVDT2026
-        PRIVATE Qt6::Quick Qt6::Network Qt6::Sql
+        PRIVATE Qt6::Quick Qt6::Network Qt6::Sql Qt6::Positioning
 )
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
+# QML expects to find C++ elements headers in root(?), so we include these to satisfy the QML overlord
+# TODO: Split this CMake files so it look less ugly
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/model")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/provider")
 
 install(TARGETS appVDT2026
     BUNDLE DESTINATION .

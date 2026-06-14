@@ -1,22 +1,28 @@
 #ifndef SHIPRADARINFOMODEL_H
 #define SHIPRADARINFOMODEL_H
 
+#include <QObject>
+#include <qqmlintegration.h>
 #include <qtypes.h>
 #include <QDateTime>
-
-struct Coordinate {
-    qreal latitude;
-    qreal longitude;
-};
+#include <QGeoCoordinate>
 
 class ShipRadarInfoModel
 {
+    Q_GADGET // Use Q_GADGET cause QObject would be overkill. We don't need signals here anyways
+    QML_ELEMENT
+    Q_PROPERTY(QGeoCoordinate coord READ coord)
+    Q_PROPERTY(qreal angle READ angle)
+    Q_PROPERTY(qreal speed READ speed)
+    Q_PROPERTY(QDateTime timestamp READ timestamp)
+    Q_PROPERTY(qint64 shipId READ shipId)
+
 public:
     ShipRadarInfoModel();
-    ShipRadarInfoModel(qint64 shipId, const Coordinate &coord, qreal angle, qreal speed, const QDateTime &timestamp);
+    ShipRadarInfoModel(qint64 shipId, const QGeoCoordinate &coord, qreal angle, qreal speed, const QDateTime &timestamp);
 
-    Coordinate coord() const;
-    void setCoord(const Coordinate &newCoord);
+    QGeoCoordinate coord() const;
+    void setCoord(const QGeoCoordinate &newCoord);
     qreal angle() const;
     void setAngle(qreal newAngle);
     qreal speed() const;
@@ -28,7 +34,7 @@ public:
 
 private:
     qint64 m_shipId{};
-    Coordinate m_coord{};
+    QGeoCoordinate m_coord{};
     qreal m_angle{};
     qreal m_speed{};
     QDateTime m_timestamp{};

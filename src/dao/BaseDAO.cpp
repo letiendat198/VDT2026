@@ -9,7 +9,7 @@ BaseDAO::BaseDAO() {
 
     m_db = QSqlDatabase::addDatabase("QPSQL");
 
-    m_db.setHostName("loclahost");
+    m_db.setHostName("localhost");
     m_db.setDatabaseName("gisVDT");
     m_db.setUserName("postgres");
     m_db.setPassword("admin");

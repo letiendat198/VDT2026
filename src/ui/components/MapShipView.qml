@@ -6,6 +6,7 @@ import QtPositioning
 
 Item {
     required property Map map
+    property var listShip
 
     anchors.fill: parent
     ListModel {
@@ -21,13 +22,13 @@ Item {
         id: mapShipDelegate
 
         MapQuickItem {
-            required property real latitude
-            required property real longitude
+            required property geoCoordinate coord
+            required property real angle
+            required property real speed
+            required property date timestamp
+            required property int shipId
 
-            coordinate {
-                latitude: latitude
-                longitude: longitude
-            }
+            coordinate: coord
             anchorPoint: shipMarker.Center
 
             sourceItem: Item {
@@ -63,7 +64,7 @@ Item {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignTop
 
-                            text: "Hello from the other sidee"
+                            text: qsTr("Ship ID: ") + shipId
                             wrapMode: Text.Wrap
                         }
                     }
@@ -74,14 +75,26 @@ Item {
 
     MapItemView {
         id: mapShipView
-        model: mapShipModel
+        model: listShip
         delegate: mapShipDelegate
 
         anchors.fill: parent
     }
 
+    Connections {
+        target: ShipRadarInfoProvider
+        function onDataReady(data) {
+            console.log("Data ready")
+            console.log(data[0].shipId)
+            console.log(data[0].coord)
+            listShip = data
+        }
+    }
+
     Component.onCompleted: {
         map.addMapItemView(mapShipView)
+
+        ShipRadarInfoProvider.requestAllLastest()
     }
 
     Component.onDestruction: {
