@@ -3,9 +3,13 @@
 #include <QLoggingCategory>
 #include <QQmlContext>
 
+#include <socket/Server.h>
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+
+    Server infoServer(8888);
 
     QQmlApplicationEngine engine;
     QObject::connect(

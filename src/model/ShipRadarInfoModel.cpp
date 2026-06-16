@@ -68,7 +68,10 @@ QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo)
     stream << shipInfo.coord().longitude();
     stream << shipInfo.angle();
     stream << shipInfo.speed();
-    stream << shipInfo.timestamp();
+    // Undocumented. IDK how Qt serialize this QDateTime
+    // stream << shipInfo.timestamp();
+    // Use epoch MS for easier time serializing
+    stream << shipInfo.timestamp().toMSecsSinceEpoch();
 
     return stream;
 }
@@ -79,14 +82,16 @@ QDataStream &operator>>(QDataStream &stream, ShipRadarInfoModel &shipInfo) {
     qreal log;
     qreal angle;
     qreal speed;
-    QDateTime timestamp;
+    quint64 epochMs;
 
     stream >> shipId;
     stream >> lat;
     stream >> log;
     stream >> angle;
     stream >> speed;
-    stream >> timestamp;
+    stream >> epochMs;
+
+    QDateTime timestamp = QDateTime::fromMSecsSinceEpoch(epochMs);
 
     shipInfo = ShipRadarInfoModel(shipId, QGeoCoordinate(lat, log), angle, speed, timestamp);
 

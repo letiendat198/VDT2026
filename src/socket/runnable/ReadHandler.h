@@ -6,7 +6,7 @@
 #include <QPointer>
 
 
-class ReadHandler : QRunnable
+class ReadHandler : public QRunnable
 {
 public:
     ReadHandler(QPointer<QTcpSocket> socket);

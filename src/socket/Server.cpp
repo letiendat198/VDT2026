@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-Server::Server(QObject *parent, int port) : m_server(parent) {
+Server::Server(int port, QObject *parent) : m_server(parent), QObject(parent) {
     connect(&m_server, &QTcpServer::newConnection, this, &Server::onNewConnection);
     connect(&m_server, &QTcpServer::pendingConnectionAvailable, this, &Server::onPendingConnectionAvailable);
 

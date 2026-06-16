@@ -10,7 +10,7 @@
 class ShipRadarInfoModel
 {
     Q_GADGET // Use Q_GADGET cause QObject would be overkill. We don't need signals here anyways
-    QML_ELEMENT
+    QML_VALUE_TYPE(shipRadarInfoModel)
     Q_PROPERTY(QGeoCoordinate coord READ coord)
     Q_PROPERTY(qreal angle READ angle)
     Q_PROPERTY(qreal speed READ speed)

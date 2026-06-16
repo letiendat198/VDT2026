@@ -1,4 +1,7 @@
 #include "ClientHandler.h"
+#include "socket/runnable/ReadHandler.h"
+
+#include <QThreadPool>
 
 ClientHandler* ClientHandler::m_instance = nullptr;
 
@@ -30,7 +33,8 @@ void ClientHandler::onClientIncoming(int key) {
 
     if (!client) return;
 
-
+    ReadHandler *readRunnable = new ReadHandler(client);
+    QThreadPool::globalInstance()->start(readRunnable);
 }
 
 void ClientHandler::onClientDisconnected(int key) {

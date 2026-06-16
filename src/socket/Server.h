@@ -7,7 +7,7 @@ class Server : public QObject
 {
     Q_OBJECT
 public:
-    Server(QObject *parent, int port);
+    Server(int port, QObject *parent = nullptr);
     ~Server();
 
 public slots:
