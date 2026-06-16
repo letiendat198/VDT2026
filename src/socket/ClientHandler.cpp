@@ -11,7 +11,7 @@ void ClientHandler::addClient(QTcpSocket *socket) {
     // Socket needs to be connected, otherwise there won't be port number
     Q_ASSERT(socket->state() == QAbstractSocket::ConnectedState);
 
-    int clientPort = socket->localPort();
+    int clientPort = socket->peerPort();
 
     connect(socket, &QTcpSocket::disconnected, this, [this, clientPort](){
         onClientDisconnected(clientPort);
@@ -29,11 +29,12 @@ void ClientHandler::addClient(QTcpSocket *socket) {
 }
 
 void ClientHandler::onClientIncoming(int key) {
+    qDebug() << "Client" << key << "have something to share";
     QPointer<QTcpSocket> client = m_mapClient[key];
 
     if (!client) return;
 
-    ReadHandler *readRunnable = new ReadHandler(client);
+    ReadHandler *readRunnable = new ReadHandler(client, key);
     QThreadPool::globalInstance()->start(readRunnable);
 }
 

@@ -4,7 +4,7 @@
 
 #include <QDataStream>
 
-ReadHandler::ReadHandler(QPointer<QTcpSocket> socket) : m_socket(socket) {}
+ReadHandler::ReadHandler(QPointer<QTcpSocket> socket, int key) : m_socket(socket), m_key(key) {}
 
 // Byte 0: Method. Not used, but just in case we want to expand later
 // Byte 1-4: Size of message. May be overkill honestly
@@ -18,16 +18,26 @@ void ReadHandler::run() {
     inHeader >> method;
     inHeader >> size;
 
+    qDebug() << "Message method" << method;
+    qDebug() << "Message size" << size;
+
     QByteArray data = m_socket->read(size);
     QDataStream inData(data);
 
-    ShipRadarInfoDAO shipInfoDAO;
+    // qDebug() << "Recv data body" << data.toHex();
+
+    ShipRadarInfoDAO shipInfoDAO(QString::number(m_key));
+    QList<ShipRadarInfoModel> listInfo;
 
     while (!inData.atEnd()) {
         ShipRadarInfoModel shipInfo;
 
         inData >> shipInfo;
 
-        shipInfoDAO.insert(shipInfo);
+        qDebug() << shipInfo.shipId() << shipInfo.coord() << shipInfo.angle() << shipInfo.speed();
+
+        listInfo.append(shipInfo);
     }
+
+    shipInfoDAO.insertMany(listInfo);
 }

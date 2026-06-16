@@ -8,8 +8,10 @@ class ShipRadarInfoDAO : public BaseDAO
 {
 public:
     ShipRadarInfoDAO();
+    ShipRadarInfoDAO(const QString &key);
 
     bool insert(ShipRadarInfoModel info);
+    bool insertMany(QList<ShipRadarInfoModel> listInfo);
 
     QList<ShipRadarInfoModel> getAllLastest();
     ShipRadarInfoModel getLastestByShipId(qint64 id);

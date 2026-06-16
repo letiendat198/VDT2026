@@ -7,7 +7,7 @@
 class BaseDAO
 {
 public:
-    BaseDAO();
+    BaseDAO(const QString &key = "default");
 protected:
     QSqlDatabase m_db;
 };

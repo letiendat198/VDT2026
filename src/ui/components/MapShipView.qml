@@ -9,14 +9,6 @@ Item {
     property var listShip
 
     anchors.fill: parent
-    ListModel {
-        id: mapShipModel
-
-        ListElement {
-            latitude: 15
-            longitude: 114
-        }
-    }
 
     Component {
         id: mapShipDelegate
@@ -26,10 +18,9 @@ Item {
             required property real angle
             required property real speed
             required property date timestamp
-            required property int shipId
+            required property string shipId
 
             coordinate: coord
-            anchorPoint: shipMarker.Center
 
             sourceItem: Item {
                 Rectangle {
@@ -52,9 +43,9 @@ Item {
                     anchors.horizontalCenter: shipMarker.horizontalCenter
                     anchors.bottomMargin: 10
 
-                    width: 200
-                    height: 100
-                    color: Qt.rgba(1, 1, 1, 0.5)
+                    width: 250
+                    height: 150
+                    color: Qt.rgba(1, 1, 1, 0.8)
                     visible: hoverHandler.hovered ? true : false
 
                     ColumnLayout {
@@ -65,6 +56,30 @@ Item {
                             Layout.alignment: Qt.AlignTop
 
                             text: qsTr("Ship ID: ") + shipId
+                            wrapMode: Text.Wrap
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignTop
+
+                            text: qsTr("Angle: ") + angle
+                            wrapMode: Text.Wrap
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignTop
+
+                            text: qsTr("Speed: ") + speed
+                            wrapMode: Text.Wrap
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignTop
+
+                            text: qsTr("Last updated: ") + timestamp
                             wrapMode: Text.Wrap
                         }
                     }

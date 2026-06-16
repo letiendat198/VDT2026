@@ -5,20 +5,44 @@
 
 ShipRadarInfoDAO::ShipRadarInfoDAO() : BaseDAO() {}
 
+ShipRadarInfoDAO::ShipRadarInfoDAO(const QString &key) : BaseDAO(key) {}
+
 bool ShipRadarInfoDAO::insert(ShipRadarInfoModel info) {
     QSqlQuery query(m_db);
 
-    query.prepare("INSERT INTO ship_radar_info (coordinate, speed, angle, timestamp, ship_id) VALUES('SRID=4326;POINT(? ?)', ?, ?, ?, ?);");
+    bool ok = query.prepare("INSERT INTO ship_radar_info (coordinate, speed, angle, timestamp, ship_id) VALUES(?, ?, ?, ?, ?);");
+    if (!ok) qDebug() << query.lastError();
 
     // https://postgis.net/documentation/tips/lon-lat-or-lat-lon/
-    query.addBindValue(info.coord().longitude());
-    query.addBindValue(info.coord().latitude());
+    query.addBindValue(QString("SRID=4326;POINT(%1 %2)").arg(info.coord().longitude()).arg(info.coord().latitude()));
+    // query.addBindValue(QString::number(info.coord().longitude()));
+    // query.addBindValue(QString::number(info.coord().latitude()));
     query.addBindValue(info.speed());
     query.addBindValue(info.angle());
     query.addBindValue(info.timestamp());
     query.addBindValue(info.shipId());
 
-    return query.exec();
+    ok = query.exec();
+    if (!ok) qDebug() << query.lastError();
+
+    return ok;
+}
+
+bool ShipRadarInfoDAO::insertMany(QList<ShipRadarInfoModel> listInfo)
+{
+    bool ok = m_db.transaction();
+    if (!ok) return false;
+
+    Q_FOREACH(ShipRadarInfoModel model, listInfo) {
+        ok = insert(model);
+        if (!ok) {
+            m_db.rollback();
+            return false;
+        }
+    }
+
+    m_db.commit();
+    return true;
 }
 
 QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastest() {

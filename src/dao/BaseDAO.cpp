@@ -1,13 +1,13 @@
 #include "BaseDAO.h"
 
-BaseDAO::BaseDAO() {
-    // If contain default database connection then don't add it again
-    if (QSqlDatabase::contains()) {
-        m_db = QSqlDatabase::database();
+BaseDAO::BaseDAO(const QString &key) {
+    // Open a new connection for each key (key should be unique for each thread)
+    if (QSqlDatabase::contains(key)) {
+        m_db = QSqlDatabase::database(key);
         return;
     }
 
-    m_db = QSqlDatabase::addDatabase("QPSQL");
+    m_db = QSqlDatabase::addDatabase("QPSQL", key);
 
     m_db.setHostName("localhost");
     m_db.setDatabaseName("gisVDT");
