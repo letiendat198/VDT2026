@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 import QtLocation
 import QtPositioning
 
@@ -10,79 +9,26 @@ Item {
 
     anchors.fill: parent
 
+    MapInfoPopup {
+        id: infoPopup
+    }
+
     Component {
         id: mapShipDelegate
 
         MapQuickItem {
-            required property geoCoordinate coord
-            required property real angle
-            required property real speed
-            required property date timestamp
-            required property string shipId
+            id: mapItem
+            coordinate: modelData.coord
 
-            coordinate: coord
+            sourceItem: MapShipIndicator {
+                id: shipIndicator
+            }
 
-            sourceItem: Item {
-                Rectangle {
-                    id: shipMarker
-                    width: 10
-                    height: 10
-                    color: 'green'
-                    radius: 180
-                }
-
-                HoverHandler {
-                    id: hoverHandler
-                    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-                    parent: shipMarker
-                }
-
-                Rectangle {
-                    id: infoRect
-                    anchors.bottom: shipMarker.top
-                    anchors.horizontalCenter: shipMarker.horizontalCenter
-                    anchors.bottomMargin: 10
-
-                    width: 250
-                    height: 150
-                    color: Qt.rgba(1, 1, 1, 0.8)
-                    visible: hoverHandler.hovered ? true : false
-
-                    ColumnLayout {
-                        anchors.fill: parent
-
-                        Text {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignTop
-
-                            text: qsTr("Ship ID: ") + shipId
-                            wrapMode: Text.Wrap
-                        }
-
-                        Text {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignTop
-
-                            text: qsTr("Angle: ") + angle
-                            wrapMode: Text.Wrap
-                        }
-
-                        Text {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignTop
-
-                            text: qsTr("Speed: ") + speed
-                            wrapMode: Text.Wrap
-                        }
-
-                        Text {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignTop
-
-                            text: qsTr("Last updated: ") + timestamp
-                            wrapMode: Text.Wrap
-                        }
-                    }
+            Connections {
+                target: shipIndicator.shipTapHandler
+                function onTapped() {
+                    infoPopup.shipData = modelData
+                    infoPopup.open()
                 }
             }
         }
@@ -96,20 +42,25 @@ Item {
         anchors.fill: parent
     }
 
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            ShipRadarInfoProvider.requestAllLatest()
+        }
+    }
+
     Connections {
         target: ShipRadarInfoProvider
         function onDataReady(data) {
-            console.log("Data ready")
-            console.log(data[0].shipId)
-            console.log(data[0].coord)
+            // console.log("Data ready")
             listShip = data
         }
     }
 
     Component.onCompleted: {
         map.addMapItemView(mapShipView)
-
-        ShipRadarInfoProvider.requestAllLastest()
     }
 
     Component.onDestruction: {

@@ -18,8 +18,8 @@ void ReadHandler::run() {
     inHeader >> method;
     inHeader >> size;
 
-    qDebug() << "Message method" << method;
-    qDebug() << "Message size" << size;
+    // qDebug() << "Message method" << method;
+    // qDebug() << "Message size" << size;
 
     QByteArray data = m_socket->read(size);
     QDataStream inData(data);
@@ -34,7 +34,7 @@ void ReadHandler::run() {
 
         inData >> shipInfo;
 
-        qDebug() << shipInfo.shipId() << shipInfo.coord() << shipInfo.angle() << shipInfo.speed();
+        // qDebug() << shipInfo.shipId() << shipInfo.coord() << shipInfo.angle() << shipInfo.speed();
 
         listInfo.append(shipInfo);
     }

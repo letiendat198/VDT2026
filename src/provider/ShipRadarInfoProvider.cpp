@@ -4,8 +4,8 @@
 
 ShipRadarInfoProvider::ShipRadarInfoProvider(QObject *parent) : QObject(parent) {}
 
-void ShipRadarInfoProvider::requestAllLastest() {
-    qDebug() << "Lastest radar info requested";
+void ShipRadarInfoProvider::requestAllLatest() {
+    // qDebug() << "Lastest radar info requested";
 
     ShipRadarInfoDAO shipInfoDAO;
 

@@ -23,6 +23,8 @@ qt_add_qml_module(appVDT2026
     SOURCES
         provider/ShipRadarInfoProvider.cpp provider/ShipRadarInfoProvider.h
         model/ShipRadarInfoModel.cpp model/ShipRadarInfoModel.h
+        QML_FILES ui/components/MapInfoPopup.qml
+        QML_FILES ui/components/MapShipIndicator.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

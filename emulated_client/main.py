@@ -10,8 +10,12 @@ import pointpats.random
 from typing import List
 from concurrent.futures import ThreadPoolExecutor
 import uuid
+from geographiclib.constants import Constants
+from geographiclib.geodesic import Geodesic
 
 from config import cfg
+
+shipIdCounter = 0
 
 class Ship:
     def __init__(self, id: int, initPos: Point, initAngle: float, initSpeed: float) -> None:
@@ -23,12 +27,11 @@ class Ship:
     def tick(self, duration, angleDelta):
         self.angle += angleDelta
 
-        distant = self.speed * duration
-        angleRad = math.radians(self.angle)
-        x = math.sin(angleRad) * distant
-        y = math.cos(angleRad) * distant
+        distant = duration * self.speed
 
-        self.pos = Point(self.pos.x + x, self.pos.y + y)
+        geod = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
+        d = geod.Direct(self.pos.x, self.pos.y, self.angle, distant)
+        self.pos = Point(d['lat2'], d['lon2'])
 
     def toBytes(self):
         b = pack("!qddddQ", self.id, self.pos.x, self.pos.y, self.angle, self.speed, int(time() * 1000))
@@ -60,8 +63,10 @@ def init(cluster) -> List[Ship]:
         else:
             raise Exception("Not supported argument number")
 
-        # 128-bit should shift by 64, but since i want positive integer, 65 it is
-        id = uuid.uuid1().int >> 65
+        # Use a counter so ship ID stay the same, so client won't show tons of ships and can continue to update after restarting
+        global shipIdCounter
+        id = shipIdCounter
+        shipIdCounter += 1
 
         listShip.append(Ship(id, randomInitial[i], initAngle, initSpeed))
 
@@ -86,14 +91,23 @@ def run(cluster):
         listShip = init(cluster)
         angleDeltaArgs = len(cluster["angleDelta"])
 
-        message = makeMessage(listShip)
-
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((cfg["targetAddr"], cfg["targetPort"]))
+        connected = False
+
+        while not connected:
+            try:
+                s.connect((cfg["targetAddr"], cfg["targetPort"]))
+                connected = True
+            except Exception:
+                print("Can't connect to {target}:{port}. Try again in 5 seconds".format(target = cfg["targetAddr"], port = cfg["targetPort"]))
+                sleep(5)
+
+        print("Connected to target. Sending!")
 
         sleep(cluster["initialDelay"])
 
         while True:
+            message = makeMessage(listShip)
             s.send(message)
 
             start = time()

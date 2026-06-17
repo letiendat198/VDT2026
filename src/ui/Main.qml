@@ -10,9 +10,9 @@ ApplicationWindow {
     height: 800
     title: qsTr("VDT2026")
 
-    menuBar: AppMenuBar {
-        id: menuBar
-    }
+    // menuBar: AppMenuBar {
+    //     id: menuBar
+    // }
 
     header: AppToolBar {
         id: toolBar

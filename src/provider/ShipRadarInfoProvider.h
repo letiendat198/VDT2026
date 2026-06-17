@@ -14,7 +14,7 @@ class ShipRadarInfoProvider : public QObject
     QML_SINGLETON
 public:
     ShipRadarInfoProvider(QObject *parent = nullptr);
-    Q_INVOKABLE void requestAllLastest();
+    Q_INVOKABLE void requestAllLatest();
 
 signals:
     void dataReady(QList<ShipRadarInfoModel>);

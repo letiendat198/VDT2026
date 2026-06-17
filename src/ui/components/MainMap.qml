@@ -24,7 +24,7 @@ Item {
         anchors.fill: parent
         plugin: mapPlugin
         center: QtPositioning.coordinate(15.53, 114.97)
-        zoomLevel: 5.2
+        zoomLevel: 7
         activeMapType: supportedMapTypes[supportedMapTypes.length - 1]
 
         WheelHandler {

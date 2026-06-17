@@ -6,7 +6,7 @@
 #include <QDebug>
 
 WKBConverter::WKBConverter(const QByteArray &bin) : m_ds(bin) {
-    qDebug() << "Converting WKB:" << bin.toHex();
+    // qDebug() << "Converting WKB:" << bin.toHex();
 
     m_littleEdian = bin[0];
 
