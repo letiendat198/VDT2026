@@ -1,14 +1,10 @@
 import QtQuick
 import QtQuick.Controls
-import QtLocation
-import QtPositioning
 
 // Handle selection on map
 // It only needs to show selection preview, so just use normal rectangle/circle or canvas overlay
 // No need to use MapItem
 Item {
-    required property DragHandler dragHandler
-
     property bool enabled: false
 
     property point startPoint
@@ -23,6 +19,8 @@ Item {
         id: selectionPreview
         anchors.fill: parent
 
+        z: 1
+
         onPaint: {
             var ctx = getContext("2d");
             ctx.reset();
@@ -31,10 +29,16 @@ Item {
         }
     }
 
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(0, 0, 0, 0.1)
+        visible: parent.enabled
+    }
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-        enabled: false
+        enabled: parent.enabled
 
         onPressed: (e) => {
             startPoint = Qt.point(e.x, e.y)
@@ -51,17 +55,6 @@ Item {
             startPoint = null // This actually put it to point(0,0)
             endPoint = null
             selectionPreview.requestPaint()
-        }
-    }
-
-    onEnabledChanged: {
-        if (enabled) {
-            mouseArea.enabled = true
-            dragHandler.enabled = false
-        }
-        else {
-            mouseArea.enabled = false
-            dragHandler.enabled = true
         }
     }
 }
