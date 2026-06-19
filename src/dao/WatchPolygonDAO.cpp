@@ -33,7 +33,7 @@ QList<WatchPolygonModel> WatchPolygonDAO::getAll() {
     while (query.next()) {
         WatchPolygonModel model;
         model.setId(query.value(0).toInt());
-        model.setPolygon(WKBConverter(query.value(1).toByteArray()).toQPolygonF());
+        model.setListCoord(WKBConverter(query.value(1).toByteArray()).toListCoord());
 
         listModel.append(model);
     }

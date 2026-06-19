@@ -24,8 +24,8 @@ public:
     WKBConverter(const QByteArray &bin);
 
     QGeoCoordinate toCoord();
-    QPointF toQPointF();
-    QPolygonF toQPolygonF();
+    // For POLYGON geometry type
+    QList<QGeoCoordinate> toListCoord();
 private:
     bool m_littleEdian{};
     WKBGeometryType m_type{};

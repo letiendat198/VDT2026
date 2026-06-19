@@ -29,23 +29,22 @@ QGeoCoordinate WKBConverter::toCoord(){
     return QGeoCoordinate(lat, log);
 }
 
-QPointF WKBConverter::toQPointF() {
-    QGeoCoordinate coord = this->toCoord();
-    // TODO: point in QML may work in lat/long? If shit breaks, it's probably this
-    return QPointF(coord.longitude(), coord.latitude());
-}
-
-QPolygonF WKBConverter::toQPolygonF() {
-    QPolygonF poly;
+QList<QGeoCoordinate> WKBConverter::toListCoord() {
+    QList<QGeoCoordinate> listCoord;
     quint32 numRings;
     m_ds >> numRings;
+    qDebug() << "Rings: " << numRings;
 
-    while(--numRings) {
+    while(numRings--) {
         quint32 numPoints;
         m_ds >> numPoints;
 
-        while(--numPoints) poly.append(this->toQPointF());
+        qDebug() << "Points: " << numPoints;
+
+        while(numPoints--) listCoord.append(this->toCoord());
     }
 
-    return poly;
+    qDebug() << "Converting WKB Polygon to:" << listCoord;
+
+    return listCoord;
 }

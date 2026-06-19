@@ -8,6 +8,9 @@ qt_add_executable(appVDT2026
         dao/BaseDAO.h dao/BaseDAO.cpp
         dao/ShipRadarInfoDAO.cpp
         provider/ShipRadarInfoProvider.cpp
+        model/WatchPolygonModel.cpp
+        dao/WatchPolygonDAO.cpp
+        provider/WatchPolygonProvider.cpp
 )
 
 qt_add_qml_module(appVDT2026
@@ -20,14 +23,15 @@ qt_add_qml_module(appVDT2026
         ui/map/MainMap.qml
         ui/map/MapRectSelectionHandler.qml
         ui/map/MapShipView.qml
+        ui/map/MapInfoPopup.qml
+        ui/map/MapShipIndicator.qml
+        ui/map/MapPolygonSelectionHandler.qml
     SOURCES
         provider/ShipRadarInfoProvider.cpp provider/ShipRadarInfoProvider.h
         model/ShipRadarInfoModel.cpp model/ShipRadarInfoModel.h
-        QML_FILES ui/map/MapInfoPopup.qml
-        QML_FILES ui/map/MapShipIndicator.qml
-        QML_FILES ui/map/MapPolygonSelectionHandler.qml
-        SOURCES model/WatchPolygonModel.h model/WatchPolygonModel.cpp
-        SOURCES dao/WatchPolygonDAO.h dao/WatchPolygonDAO.cpp
+        model/WatchPolygonModel.h model/WatchPolygonModel.cpp
+        provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
+        QML_FILES ui/map/MapWatchPolygonView.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

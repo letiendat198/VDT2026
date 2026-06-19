@@ -50,6 +50,10 @@ Item {
             map: map
         }
 
+        MapWatchPolygonView {
+            map: map
+        }
+
         MapRectSelectionHandler {
             id: rectSelectionHandler
             z: 1
@@ -58,6 +62,11 @@ Item {
         MapPolygonSelectionHandler {
             id: polygonSelectionHandler
             z: 1
+            map: map
+
+            onSelectionFinished: (listCoordinate) => {
+                WatchPolygonProvider.add(listCoordinate)
+            }
         }
 
         Component.onCompleted: {

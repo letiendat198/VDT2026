@@ -1,17 +1,21 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtPositioning
+import QtLocation
 
 // Handle polyhon selection on map
 // It only needs to show selection preview, so just use normal canvas overlay
 // No need to use MapItem
 Item {
+    required property Map map
     property bool enabled: false
 
     property list<point> listPoint
 
-    signal selectionFinished(polygon: list<point>)
+    signal selectionFinished(listCoordinate: list<geoCoordinate>)
 
+    id: selectionHandler
     anchors.fill: parent
 
     Canvas {
@@ -75,10 +79,22 @@ Item {
 
             ToolButton {
                 text: "Cancel"
+                onClicked: selectionHandler.enabled = false;
             }
 
             ToolButton {
                 text: "Save"
+                onClicked: {
+                    // Convert to geoCoordinate before emitting
+                    var listCoordinate = []
+                    for(var p of listPoint) {
+                        listCoordinate.push(map.toCoordinate(p))
+                    }
+
+                    selectionFinished(listCoordinate)
+
+                    selectionHandler.enabled = false;
+                }
             }
         }
     }
