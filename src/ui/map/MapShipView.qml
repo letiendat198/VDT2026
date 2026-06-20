@@ -19,9 +19,12 @@ Item {
         MapQuickItem {
             id: mapItem
             coordinate: modelData.coord
+            anchorPoint.x: shipIndicator.width / 2
+            anchorPoint.y: shipIndicator.height / 2
 
             sourceItem: MapShipIndicator {
                 id: shipIndicator
+                color: modelData.listCrossedWatchPolygonId.length === 0 ? "green" : "yellow"
             }
 
             Connections {
@@ -56,6 +59,7 @@ Item {
         function onDataReady(data) {
             // console.log("Data ready")
             listShip = data
+            // console.log(listShip)
         }
     }
 

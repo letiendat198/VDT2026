@@ -9,7 +9,8 @@ ShipRadarInfoModel::ShipRadarInfoModel(qint64 shipId, const QGeoCoordinate &coor
     m_coord(coord),
     m_angle(std::move(angle)),
     m_speed(std::move(speed)),
-    m_timestamp(timestamp)
+    m_timestamp(timestamp),
+    m_listCrossedWatchPolygonId()
 {}
 
 QGeoCoordinate ShipRadarInfoModel::coord() const
@@ -60,6 +61,16 @@ qint64 ShipRadarInfoModel::shipId() const
 void ShipRadarInfoModel::setShipId(qint64 newShipId)
 {
     m_shipId = newShipId;
+}
+
+QList<int> ShipRadarInfoModel::listCrossedWatchPolygonId() const
+{
+    return m_listCrossedWatchPolygonId;
+}
+
+void ShipRadarInfoModel::addCrossedWatchPolygon(int id)
+{
+    m_listCrossedWatchPolygonId.append(id);
 }
 
 QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo) {

@@ -49,25 +49,53 @@ QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastest() {
     QSqlQuery query(m_db);
 
     // Id is auto incrementing, max id should be lastest
-    query.prepare("SELECT ST_AsBinary(coordinate), speed, angle, timestamp, ship_id "
-                  "FROM ship_radar_info WHERE id IN (SELECT MAX(id) FROM ship_radar_info GROUP BY ship_id);");
+    // Ship id should be unique too!
+    bool ok = query.prepare("SELECT ST_AsBinary(coordinate), speed, angle, timestamp, ship_id, watch_polygon.id "
+                  "FROM ship_radar_info "
+                  "LEFT JOIN watch_polygon ON ST_COVERS(watch_polygon.polygon, ship_radar_info.coordinate) "
+                  "WHERE ship_radar_info.id IN (SELECT MAX(ship_radar_info.id) FROM ship_radar_info GROUP BY ship_id);");
+    if (!ok) qDebug() << query.lastError();
 
-    query.exec();
+    ok = query.exec();
+    if (!ok) qDebug() << query.lastError();
 
-    QList<ShipRadarInfoModel> listModel;
+    QMap<qint64, ShipRadarInfoModel> mapModel;
 
     while (query.next()) {
-        ShipRadarInfoModel model;
-        model.setShipId(query.value(4).toLongLong());
-        model.setCoord(WKBConverter(query.value(0).toByteArray()).toCoord());
-        model.setSpeed(query.value(1).toReal());
-        model.setAngle(query.value(2).toReal());
-        model.setTimestamp(query.value(3).toDateTime());
+        qint64 shipId = query.value(4).toLongLong();
+        QVariant watchPolygonIdValue = query.value(5);
+        bool crossesWatchPolygon = watchPolygonIdValue.isValid() == true && watchPolygonIdValue.isNull() == false;
 
-        listModel.append(model);
+        // JOIN can produce duplicates (because one ship can belongs to many watch polygons)
+        // So check if existed, if yes then just add watch polygon id to existing list
+        if (mapModel.contains(shipId)) {
+            if (!crossesWatchPolygon) continue;
+
+            int watchPolygonId = watchPolygonIdValue.toInt();
+            mapModel[shipId].addCrossedWatchPolygon(watchPolygonId);
+        }
+        else {
+            QGeoCoordinate coord = WKBConverter(query.value(0).toByteArray()).toCoord();
+            qreal speed = query.value(1).toReal();
+            qreal angle = query.value(2).toReal();
+            QDateTime timestamp = query.value(3).toDateTime();
+
+            ShipRadarInfoModel model;
+            model.setShipId(shipId);
+            model.setCoord(coord);
+            model.setSpeed(speed);
+            model.setAngle(angle);
+            model.setTimestamp(timestamp);
+            if (crossesWatchPolygon) {
+                int watchPolygonId = watchPolygonIdValue.toInt();
+                model.addCrossedWatchPolygon(watchPolygonId);
+            }
+
+            mapModel[shipId] = model;
+        }
     }
 
-    return listModel;
+    return mapModel.values();
 }
 
 ShipRadarInfoModel ShipRadarInfoDAO::getLastestByShipId(qint64 id) {

@@ -33,18 +33,18 @@ QList<QGeoCoordinate> WKBConverter::toListCoord() {
     QList<QGeoCoordinate> listCoord;
     quint32 numRings;
     m_ds >> numRings;
-    qDebug() << "Rings: " << numRings;
+    // qDebug() << "Rings: " << numRings;
 
     while(numRings--) {
         quint32 numPoints;
         m_ds >> numPoints;
 
-        qDebug() << "Points: " << numPoints;
+        // qDebug() << "Points: " << numPoints;
 
         while(numPoints--) listCoord.append(this->toCoord());
     }
 
-    qDebug() << "Converting WKB Polygon to:" << listCoord;
+    // qDebug() << "Converting WKB Polygon to:" << listCoord;
 
     return listCoord;
 }

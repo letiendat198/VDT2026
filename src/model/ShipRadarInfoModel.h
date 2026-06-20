@@ -16,6 +16,7 @@ class ShipRadarInfoModel
     Q_PROPERTY(qreal speed READ speed)
     Q_PROPERTY(QDateTime timestamp READ timestamp)
     Q_PROPERTY(qint64 shipId READ shipId)
+    Q_PROPERTY(QList<int> listCrossedWatchPolygonId READ listCrossedWatchPolygonId)
 
 public:
     ShipRadarInfoModel();
@@ -32,12 +33,16 @@ public:
     qint64 shipId() const;
     void setShipId(qint64 newShipId);
 
+    QList<int> listCrossedWatchPolygonId() const;
+    void addCrossedWatchPolygon(int id);
+
 private:
     qint64 m_shipId{};
     QGeoCoordinate m_coord{};
     qreal m_angle{};
     qreal m_speed{};
     QDateTime m_timestamp{};
+    QList<int> m_listCrossedWatchPolygonId{};
 };
 
 QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo);

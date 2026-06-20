@@ -2,6 +2,7 @@ import QtQuick
 
 Item {
     property alias shipTapHandler: tapHandler
+    property alias color: shipMarker.color
 
     Rectangle {
         id: shipMarker
