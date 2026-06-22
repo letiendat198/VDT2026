@@ -9,8 +9,6 @@ Item {
 
     property alias map: map
 
-    enum SelectionType { Rect = 0, Polygon = 1 }
-
     Plugin {
         id: mapPlugin
         name: "osm"
@@ -36,31 +34,28 @@ Item {
                                          : PointerDevice.Mouse
             rotationScale: 1/120
             property: "zoomLevel"
-            enabled: !rectSelectionHandler.enabled && !polygonSelectionHandler.enabled
+            enabled: !selectionHandler.enabled
         }
 
         DragHandler {
             id: drag
             target: null
             onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
-            enabled: !rectSelectionHandler.enabled && !polygonSelectionHandler.enabled
+            enabled: !selectionHandler.enabled
         }
 
         MapShipView {
+            id: shipView
             map: map
         }
 
         MapWatchPolygonView {
+            id: watchView
             map: map
         }
 
-        MapRectSelectionHandler {
-            id: rectSelectionHandler
-            z: 1
-        }
-
-        MapPolygonSelectionHandler {
-            id: polygonSelectionHandler
+        MapSelectionHandler {
+            id: selectionHandler
             z: 1
             map: map
 
@@ -69,14 +64,11 @@ Item {
             }
         }
 
-        Component.onCompleted: {
-            zoomLevelChanged(zoomLevel)
-        }
-
+        // Zoom control
         Rectangle {
             width: childrenRect.width
             height: childrenRect.height
-            visible: !rectSelectionHandler.enabled && !polygonSelectionHandler.enabled
+            visible: !selectionHandler.enabled
 
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -100,6 +92,15 @@ Item {
             }
         }
 
+        MapNotification {
+            id: notification
+
+            z: 99
+        }
+
+        Component.onCompleted: {
+            zoomLevelChanged(zoomLevel)
+        }
     }
 
     function zoomIn() {
@@ -110,16 +111,9 @@ Item {
         map.zoomLevel -= 0.5
     }
 
-    function setSelectionEnabled(enabled: bool, type: int) {
-        var selectionList = [rectSelectionHandler, polygonSelectionHandler]
-        for (var i=0; i<selectionList.length; i++) {
-            if (i === type) selectionList[i].enabled = enabled;
-            else {
-                // If enable a selection, set others to false
-                // Otherwise, don't change because the ToolButton uncheck signal may come after another ToolButton checked signal
-                // thus disable the newly selected tool
-                if (enabled) selectionList[i].enabled = false;
-            }
+    function setSelectionEnabled(enabled: bool) {
+        if (selectionHandler.enabled !== enabled) {
+            selectionHandler.enabled = enabled
         }
     }
 }

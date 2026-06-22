@@ -21,17 +21,19 @@ qt_add_qml_module(appVDT2026
         ui/AppStatusBar.qml
         ui/AppToolBar.qml
         ui/map/MainMap.qml
-        ui/map/MapRectSelectionHandler.qml
+
         ui/map/MapShipView.qml
         ui/map/MapInfoPopup.qml
         ui/map/MapShipIndicator.qml
-        ui/map/MapPolygonSelectionHandler.qml
+        ui/map/MapSelectionHandler.qml
     SOURCES
         provider/ShipRadarInfoProvider.cpp provider/ShipRadarInfoProvider.h
         model/ShipRadarInfoModel.cpp model/ShipRadarInfoModel.h
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
         QML_FILES ui/map/MapWatchPolygonView.qml
+        SOURCES provider/NotificationProvider.h provider/NotificationProvider.cpp
+        QML_FILES ui/map/MapNotification.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

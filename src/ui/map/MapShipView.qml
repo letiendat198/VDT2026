@@ -5,7 +5,8 @@ import QtPositioning
 
 Item {
     required property Map map
-    property var listShip
+
+    property var shipData
 
     anchors.fill: parent
 
@@ -39,7 +40,7 @@ Item {
 
     MapItemView {
         id: mapShipView
-        model: listShip
+        model: shipData
         delegate: mapShipDelegate
 
         anchors.fill: parent
@@ -58,8 +59,8 @@ Item {
         target: ShipRadarInfoProvider
         function onDataReady(data) {
             // console.log("Data ready")
-            listShip = data
-            // console.log(listShip)
+            shipData = data
+            // console.log(data)
         }
     }
 

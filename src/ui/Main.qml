@@ -27,13 +27,8 @@ ApplicationWindow {
         id: mainMap
 
         Connections {
-            target: toolBar.selectionRect
-            function onCheckedChanged() { mainMap.setSelectionEnabled(toolBar.selectionRect.checked, MainMap.SelectionType.Rect) }
-        }
-
-        Connections {
             target: toolBar.selectionPolygon
-            function onCheckedChanged() { mainMap.setSelectionEnabled(toolBar.selectionPolygon.checked, MainMap.SelectionType.Polygon) }
+            function onCheckedChanged() { mainMap.setSelectionEnabled(toolBar.selectionPolygon.checked) }
         }
     }
 }

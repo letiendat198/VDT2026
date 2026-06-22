@@ -3,7 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 ToolBar {
-    property alias selectionRect: selectionRectBtn
     property alias selectionPolygon: selectionPolygonBtn
 
     RowLayout {
@@ -25,21 +24,21 @@ ToolBar {
             }
 
             ToolButton {
-                id: selectionRectBtn
-                text: qsTr("Rect")
-                checkable: true
-
-                ToolTip.visible: hovered
-                ToolTip.text: qsTr("Select a rectangular region")
-            }
-
-            ToolButton {
                 id: selectionPolygonBtn
-                text: qsTr("Polygon")
+                text: qsTr("Select")
                 checkable: true
 
                 ToolTip.visible: hovered
                 ToolTip.text: qsTr("Select a polygonal region")
+            }
+
+            ToolButton {
+                id: deleteSelectionBtn
+                text: qsTr("Delete")
+                checkable: true
+
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Delete a selection region")
             }
         }
     }
