@@ -32,8 +32,8 @@ qt_add_qml_module(appVDT2026
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
         QML_FILES ui/map/MapWatchPolygonView.qml
-        SOURCES provider/NotificationProvider.h provider/NotificationProvider.cpp
         QML_FILES ui/map/MapNotification.qml
+        SOURCES model/ShipRadarInfoItemModel.h model/ShipRadarInfoItemModel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

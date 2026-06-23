@@ -59,7 +59,7 @@ QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastest() {
     ok = query.exec();
     if (!ok) qDebug() << query.lastError();
 
-    QMap<qint64, ShipRadarInfoModel> mapModel;
+    QHash<qint64, ShipRadarInfoModel> mapModel;
 
     while (query.next()) {
         qint64 shipId = query.value(4).toLongLong();

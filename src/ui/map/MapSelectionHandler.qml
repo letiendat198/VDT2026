@@ -9,7 +9,6 @@ import QtLocation
 // No need to use MapItem
 Item {
     required property Map map
-    property bool enabled: false
 
     property list<point> listPoint
 
@@ -17,6 +16,7 @@ Item {
 
     id: selectionHandler
     anchors.fill: parent
+    enabled: false
 
     Canvas {
         id: selectionPreview

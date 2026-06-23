@@ -4,6 +4,8 @@ import QtQuick.Layouts
 import QtPositioning
 import QtLocation
 
+import VDT2026
+
 Item {
     anchors.fill: parent
 
@@ -96,6 +98,13 @@ Item {
             id: notification
 
             z: 99
+        }
+
+        Connections {
+            target: shipView
+            function onShipEnteredWatchZone(shipId: int, watchId: int) {
+                notification.show(shipId, watchId)
+            }
         }
 
         Component.onCompleted: {

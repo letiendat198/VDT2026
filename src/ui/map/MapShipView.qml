@@ -3,10 +3,14 @@ import QtQuick.Controls
 import QtLocation
 import QtPositioning
 
+import VDT2026
+
 Item {
     required property Map map
 
-    property var shipData
+    property list<shipRadarInfo> listShipData
+
+    signal shipEnteredWatchZone(shipId: int, watchId: int)
 
     anchors.fill: parent
 
@@ -14,24 +18,45 @@ Item {
         id: infoPopup
     }
 
+    ShipRadarInfoItemModel {
+        id: shipModel
+    }
+
     Component {
         id: mapShipDelegate
 
         MapQuickItem {
+            required property shipRadarInfo shipData
+
+            property bool ready: false
+
             id: mapItem
-            coordinate: modelData.coord
+            coordinate: shipData.coord
             anchorPoint.x: shipIndicator.width / 2
             anchorPoint.y: shipIndicator.height / 2
 
             sourceItem: MapShipIndicator {
                 id: shipIndicator
-                color: modelData.listCrossedWatchPolygonId.length === 0 ? "green" : "yellow"
+                color: shipData.listCrossedWatchPolygonId.length === 0 ? "green" : "yellow"
+            }
+
+            Component.onCompleted: {
+                ready = true
+            }
+
+            Connections {
+                target: shipIndicator
+                function onColorChanged() {
+                    if (ready && shipData.listCrossedWatchPolygonId.length > 0) {
+                        shipEnteredWatchZone(shipData.shipId, shipData.listCrossedWatchPolygonId[0])
+                    }
+                }
             }
 
             Connections {
                 target: shipIndicator.shipTapHandler
                 function onTapped() {
-                    infoPopup.shipData = modelData
+                    infoPopup.shipData = shipData
                     infoPopup.open()
                 }
             }
@@ -40,7 +65,7 @@ Item {
 
     MapItemView {
         id: mapShipView
-        model: shipData
+        model: shipModel
         delegate: mapShipDelegate
 
         anchors.fill: parent
@@ -59,7 +84,7 @@ Item {
         target: ShipRadarInfoProvider
         function onDataReady(data) {
             // console.log("Data ready")
-            shipData = data
+            shipModel.update(data)
             // console.log(data)
         }
     }

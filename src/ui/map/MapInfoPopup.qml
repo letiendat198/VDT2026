@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 
 Popup {
-    property var shipData
+    property shipRadarInfo shipData
 
     modal: true
     focus: true

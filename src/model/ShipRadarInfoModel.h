@@ -22,6 +22,11 @@ public:
     ShipRadarInfoModel();
     ShipRadarInfoModel(qint64 shipId, const QGeoCoordinate &coord, qreal angle, qreal speed, const QDateTime &timestamp);
 
+    // QMetaType requirements
+    ~ShipRadarInfoModel() = default;
+    ShipRadarInfoModel(const ShipRadarInfoModel &) = default;
+    ShipRadarInfoModel &operator=(const ShipRadarInfoModel &) = default;
+
     QGeoCoordinate coord() const;
     void setCoord(const QGeoCoordinate &newCoord);
     qreal angle() const;
@@ -47,5 +52,8 @@ private:
 
 QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo);
 QDataStream &operator>>(QDataStream &stream, ShipRadarInfoModel &shipInfo);
+
+// Need this to use QVariant
+Q_DECLARE_METATYPE(ShipRadarInfoModel);
 
 #endif // SHIPRADARINFOMODEL_H

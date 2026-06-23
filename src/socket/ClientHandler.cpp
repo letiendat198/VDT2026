@@ -29,7 +29,7 @@ void ClientHandler::addClient(QTcpSocket *socket) {
 }
 
 void ClientHandler::onClientIncoming(int key) {
-    qDebug() << "Client" << key << "have something to share";
+    // qDebug() << "Client" << key << "have something to share";
     QPointer<QTcpSocket> client = m_mapClient[key];
 
     if (!client) return;

@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtLocation
 import QtPositioning
 
+import VDT2026
+
 Item {
     required property Map map
     property var listWatchPolygon

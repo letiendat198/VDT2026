@@ -10,7 +10,7 @@ Rectangle {
     anchors.right: parent.right
     anchors.margins: 10
 
-    visible: true
+    visible: false
 
     Text {
         id: notificationTitle
@@ -57,7 +57,7 @@ Rectangle {
 
     Timer {
         id: notificationExpireTimer
-        interval: 3
+        interval: 3000
         repeat: false
         running: false
         triggeredOnStart: false
@@ -65,9 +65,9 @@ Rectangle {
         onTriggered: visible = false
     }
 
-    function show(title: string, body: string) {
-        notificationTitle.text = title
-        notificationBody.text = body
+    function show(shipId: int, watchId: int) {
+        notificationTitle.text = "Watch zone alert"
+        notificationBody.text = "Ship ID %1 has enterred watch zone ID %2".arg(shipId).arg(watchId)
 
         visible = true
 
