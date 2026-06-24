@@ -27,7 +27,7 @@ ApplicationWindow {
     // Sync selection button on toolbar with selection handler state
     Connections {
         target: toolBar.selection
-        function onCheckedChanged() { mainMap.setSelectionEnabled(toolBar.selection.checked) }
+        function onCheckedChanged() { mainMap.setSelectionMode(toolBar.selection.checked) }
     }
 
     Connections {
@@ -41,6 +41,13 @@ ApplicationWindow {
             // But if it's disabled, please reset to pan
             else toolBar.reset()
         }
+    }
+
+    // Sync delete button to map selection delete
+    // But sync delete mode won't deactivate itself, no need to wire back
+    Connections {
+        target: toolBar.deleteSelection
+        function onCheckedChanged() { mainMap.setWatchDeleteMode(toolBar.deleteSelection.checked) }
     }
 
     Connections {

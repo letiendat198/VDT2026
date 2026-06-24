@@ -5,6 +5,7 @@ import QtQuick.Layouts
 ToolBar {
     property alias selection: selectionBtn
     property alias refresh: refreshBtn
+    property alias deleteSelection: deleteSelectionBtn
 
     RowLayout {
         ButtonGroup {

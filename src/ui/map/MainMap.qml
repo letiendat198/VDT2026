@@ -11,7 +11,6 @@ Item {
 
     property alias zoomLevel: map.zoomLevel
     property alias shipCount: shipView.shipCount
-
     property alias selectionHandler: selectionHandler
 
     // Any item inside refreshable should implement function refresh()
@@ -128,12 +127,16 @@ Item {
         }
     }
 
-    function setSelectionEnabled(enabled: bool) {
+    function setSelectionMode(enabled: bool) {
         console.log("Selection enable:" + enabled)
 
         if (selectionHandler.enabled !== enabled) {
             selectionHandler.enabled = enabled
         }
+    }
+
+    function setWatchDeleteMode(enabled: bool) {
+        if (watchView.deleteMode !== enabled) watchView.deleteMode = enabled
     }
 
     function refresh() {

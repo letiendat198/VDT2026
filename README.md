@@ -7,7 +7,7 @@
     - ~~Highlight và hiện thông báo tàu đi vào vùng select~~
     - ~~Bỏ rectangle selection~~
     - ~~Fix mấy cái binding loop~~ 
-    - Tính năng delete zone
+    - ~~Tính năng delete zone~~
 - Optional:
     - ~~Viết logic update vị trí tàu trên bản đồ bẳng ID để tránh nháy khi update~~ (Phải subclass lại QAbstractListModel)
     - Popup hiển thị thông tin cập nhật realtime thay vì thông tin lúc bấm vào
