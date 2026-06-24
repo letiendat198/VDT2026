@@ -3,7 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 ToolBar {
-    property alias selectionPolygon: selectionPolygonBtn
+    property alias selection: selectionBtn
+    property alias refresh: refreshBtn
 
     RowLayout {
         ButtonGroup {
@@ -24,7 +25,7 @@ ToolBar {
             }
 
             ToolButton {
-                id: selectionPolygonBtn
+                id: selectionBtn
                 text: qsTr("Select")
                 checkable: true
 
@@ -40,14 +41,19 @@ ToolBar {
                 ToolTip.visible: hovered
                 ToolTip.text: qsTr("Delete a selection region")
             }
+
+            ToolButton {
+                id: refreshBtn
+                text: qsTr("Refresh")
+
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Refresh all data")
+            }
         }
     }
 
-    function setSelectionRectBtnChecked(checked: bool) {
-        selectionRectBtn.checked = checked
-    }
-
-    function setSelectionPolygonBtnChecked(checked: bool) {
-        selectionPolygonBtn.checked = checked
+    function reset() {
+        console.log("Toolbar reset")
+        panBtn.checked = true
     }
 }

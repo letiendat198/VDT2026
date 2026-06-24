@@ -9,7 +9,13 @@ import VDT2026
 Item {
     anchors.fill: parent
 
-    property alias map: map
+    property alias zoomLevel: map.zoomLevel
+    property alias shipCount: shipView.shipCount
+
+    property alias selectionHandler: selectionHandler
+
+    // Any item inside refreshable should implement function refresh()
+    property var refreshable: [shipView, watchView]
 
     Plugin {
         id: mapPlugin
@@ -46,9 +52,21 @@ Item {
             enabled: !selectionHandler.enabled
         }
 
+        MapNotification {
+            id: notification
+
+            z: 99
+        }
+
         MapShipView {
             id: shipView
             map: map
+
+            onShipEnteredWatchZone: (shipId, listWatchId) => {
+                var title = "Watch zone alert"
+                var body = "Ship ID %1 has enterred watch zone%2 ID %3".arg(shipId).arg(listWatchId.length > 1 ? "s" : "").arg(listWatchId.join(", "))
+                notification.show(title, body)
+            }
         }
 
         MapWatchPolygonView {
@@ -63,13 +81,21 @@ Item {
 
             onSelectionFinished: (listCoordinate) => {
                 WatchPolygonProvider.add(listCoordinate)
+
+                watchView.refresh()
+
+                this.enabled = false
+            }
+
+            onSelectionCanceled: () => {
+                this.enabled = false
             }
         }
 
         // Zoom control
         Rectangle {
-            width: childrenRect.width
-            height: childrenRect.height
+            width: 30
+            height: 65
             visible: !selectionHandler.enabled
 
             anchors.bottom: parent.bottom
@@ -79,31 +105,21 @@ Item {
             z: 1
 
             ColumnLayout {
-                width: childrenRect.width
-                height: childrenRect.height
+                anchors.fill: parent
 
                 ToolButton {
+                    Layout.fillWidth: parent
+
                     text: "+"
-                    onClicked: zoomIn()
+                    onClicked: map.zoomLevel += 0.5
                 }
 
                 ToolButton {
+                    Layout.fillWidth: parent
+
                     text: "-"
-                    onClicked: zoomOut()
+                    onClicked: map.zoomLevel -= 0.5
                 }
-            }
-        }
-
-        MapNotification {
-            id: notification
-
-            z: 99
-        }
-
-        Connections {
-            target: shipView
-            function onShipEnteredWatchZone(shipId: int, watchId: int) {
-                notification.show(shipId, watchId)
             }
         }
 
@@ -112,17 +128,17 @@ Item {
         }
     }
 
-    function zoomIn() {
-        map.zoomLevel += 0.5
-    }
-
-    function zoomOut() {
-        map.zoomLevel -= 0.5
-    }
-
     function setSelectionEnabled(enabled: bool) {
+        console.log("Selection enable:" + enabled)
+
         if (selectionHandler.enabled !== enabled) {
             selectionHandler.enabled = enabled
+        }
+    }
+
+    function refresh() {
+        for(var item of refreshable) {
+            item.refresh()
         }
     }
 }

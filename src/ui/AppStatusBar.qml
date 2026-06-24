@@ -1,8 +1,12 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtPositioning
 
 ToolBar {
+    property int shipCount : 0
+    property real zoomLevel : 0
+
     anchors.right: parent.right
     anchors.left: parent.left
 
@@ -10,35 +14,19 @@ ToolBar {
         anchors.fill: parent
 
         Text {
-            id: ipAddrLbl
-            text: "0.0.0.0:0000"
+            text: "Displaying %1 ship%2".arg(shipCount).arg(shipCount > 1 ? "s" : "")
         }
 
         ToolSeparator {}
-
-        Text {
-            id: clientsConnectedLbl
-            text: "No client"
-        }
 
         Item {
             Layout.fillWidth: true
         }
 
-        Text {
-            id: pointerCoordLbl
-            text: "0.00, 0.00"
-        }
-
         ToolSeparator {}
 
         Text {
-            id: zoomLevelLbl
-            text: "Zoom: "
+            text: "Zoom: %1x".arg(zoomLevel)
         }
-    }
-
-    function setZoomLevel(level: real) {
-        zoomLevelLbl.text = "Zoom: %1x".arg(level.toFixed(2))
     }
 }

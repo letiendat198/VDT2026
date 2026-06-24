@@ -12,6 +12,7 @@ public:
 
     bool insert(WatchPolygonModel info);
     QList<WatchPolygonModel> getAll();
+    bool remove(int id);
 };
 
 #endif // WATCHPOLYGONDAO_H

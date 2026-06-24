@@ -8,9 +8,9 @@ import VDT2026
 Item {
     required property Map map
 
-    property list<shipRadarInfo> listShipData
+    property int shipCount : 0
 
-    signal shipEnteredWatchZone(shipId: int, watchId: int)
+    signal shipEnteredWatchZone(shipId: int, listWatchId: list<int>)
 
     anchors.fill: parent
 
@@ -35,20 +35,26 @@ Item {
             anchorPoint.x: shipIndicator.width / 2
             anchorPoint.y: shipIndicator.height / 2
 
+            width: shipIndicator.width
+            height: shipIndicator.height
+
             sourceItem: MapShipIndicator {
                 id: shipIndicator
-                color: shipData.listCrossedWatchPolygonId.length === 0 ? "green" : "yellow"
+                angle: shipData.angle
+                highlighted: shipData.listCrossedWatchPolygonId.length > 0
             }
 
             Component.onCompleted: {
                 ready = true
             }
 
+            // Have to define connections outside, cause inside sourceItem don't have shipData context
             Connections {
                 target: shipIndicator
-                function onColorChanged() {
-                    if (ready && shipData.listCrossedWatchPolygonId.length > 0) {
-                        shipEnteredWatchZone(shipData.shipId, shipData.listCrossedWatchPolygonId[0])
+                function onHighlightedChanged() {
+                    // Avoid triggering highlight changed signal when initing
+                    if (ready && shipIndicator.highlighted) {
+                        shipEnteredWatchZone(shipData.shipId, shipData.listCrossedWatchPolygonId)
                     }
                 }
             }
@@ -56,8 +62,7 @@ Item {
             Connections {
                 target: shipIndicator.shipTapHandler
                 function onTapped() {
-                    infoPopup.shipData = shipData
-                    infoPopup.open()
+                    infoPopup.openFor(mapItem, shipData)
                 }
             }
         }
@@ -76,7 +81,7 @@ Item {
         running: true
         repeat: true
         onTriggered: {
-            ShipRadarInfoProvider.requestAllLatest()
+            refresh()
         }
     }
 
@@ -85,8 +90,13 @@ Item {
         function onDataReady(data) {
             // console.log("Data ready")
             shipModel.update(data)
+            shipCount = data.length
             // console.log(data)
         }
+    }
+
+    function refresh() {
+        ShipRadarInfoProvider.requestAllLatest()
     }
 
     Component.onCompleted: {

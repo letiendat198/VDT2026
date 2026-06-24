@@ -6,6 +6,7 @@
 #include <QList>
 
 #include <model/ShipRadarInfoModel.h>
+#include <dao/ShipRadarInfoDAO.h>
 
 class ShipRadarInfoProvider : public QObject
 {
@@ -18,6 +19,9 @@ public:
 
 signals:
     void dataReady(QList<ShipRadarInfoModel>);
+
+private:
+    ShipRadarInfoDAO m_dao{};
 };
 
 #endif // SHIPRADARINFOPROVIDER_H

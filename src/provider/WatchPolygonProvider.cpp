@@ -1,24 +1,23 @@
 #include "WatchPolygonProvider.h"
-#include "dao/WatchPolygonDAO.h"
 
-
-WatchPolygonProvider::WatchPolygonProvider(QObject *parent) : QObject(parent) {}
+WatchPolygonProvider::WatchPolygonProvider(QObject *parent) : QObject(parent), m_dao() {}
 
 void WatchPolygonProvider::requestAll()
 {
     // TODO: Make this async
-    WatchPolygonDAO dao;
+    // qDebug() << "Requested data" << m_dao.getAll()[0].listCoord();
 
-    qDebug() << "Requested data" << dao.getAll()[0].listCoord();
-
-    emit dataReady(dao.getAll());
+    emit dataReady(m_dao.getAll());
 }
 
 void WatchPolygonProvider::add(QList<QGeoCoordinate> listCoord)
 {
-    qDebug() << "Inserting a watch polygon";
+    // qDebug() << "Inserting a watch polygon";
 
-    WatchPolygonDAO dao;
+    m_dao.insert(WatchPolygonModel(listCoord));
+}
 
-    dao.insert(WatchPolygonModel(listCoord));
+bool WatchPolygonProvider::remove(int id)
+{
+    return m_dao.remove(id);
 }

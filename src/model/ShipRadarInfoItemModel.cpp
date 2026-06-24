@@ -45,7 +45,7 @@ bool ShipRadarInfoItemModel::insertRows(int row, int count, const QModelIndex &p
 
 bool ShipRadarInfoItemModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-
+    return false;
 }
 
 QHash<int, QByteArray> ShipRadarInfoItemModel::roleNames() const

@@ -4,7 +4,7 @@ import QtQuick.Controls
 // Honestly, maybe consider QtQuick's Notification?
 Rectangle {
     width: 400
-    height: 150
+    height: 100
 
     anchors.top: parent.top
     anchors.right: parent.right
@@ -21,6 +21,7 @@ Rectangle {
 
         width: parent.width
 
+        font.bold: true
         text: "If you're seeing this"
 
         wrapMode: Text.Wrap
@@ -65,12 +66,13 @@ Rectangle {
         onTriggered: visible = false
     }
 
-    function show(shipId: int, watchId: int) {
-        notificationTitle.text = "Watch zone alert"
-        notificationBody.text = "Ship ID %1 has enterred watch zone ID %2".arg(shipId).arg(watchId)
+    function show(title: string, body: string) {
+        notificationTitle.text = title
+        notificationBody.text = body
 
         visible = true
 
-        notificationExpireTimer.start()
+        // In case multiple notification at the same time
+        notificationExpireTimer.restart()
     }
 }

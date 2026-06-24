@@ -2,17 +2,32 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import VDT2026
 
 Popup {
     property shipRadarInfo shipData
+    property Item target
 
     modal: true
     focus: true
     width: 320
     height: 200
-    x: 10
-    y: 10
+
+    x: target ? target.x + target.width : 10
+    y: target ? target.y + target.height : 10
+
+    background: Rectangle {
+        color: Qt.rgba(1,1,1,0.8)
+    }
+
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+    function openFor(t: Item, d: shipRadarInfo) {
+        target = t
+        shipData = d
+
+        open()
+    }
 
     ColumnLayout {
         anchors.fill: parent

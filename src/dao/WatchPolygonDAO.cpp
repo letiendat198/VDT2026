@@ -40,3 +40,18 @@ QList<WatchPolygonModel> WatchPolygonDAO::getAll() {
 
     return listModel;
 }
+
+bool WatchPolygonDAO::remove(int id)
+{
+    QSqlQuery query(m_db);
+
+    bool ok = query.prepare("DELETE FROM watch_polygon WHERE id = ?;");
+    if (!ok) qDebug() << query.lastError();
+
+    query.addBindValue(id);
+
+    ok = query.exec();
+    if (!ok) qDebug() << query.lastError();
+
+    return ok;
+}

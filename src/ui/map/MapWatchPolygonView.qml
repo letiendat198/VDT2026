@@ -8,6 +8,7 @@ import VDT2026
 Item {
     required property Map map
     property var listWatchPolygon
+    property bool removeMode: false
 
     anchors.fill: parent
 
@@ -39,12 +40,16 @@ Item {
     }
 
     Component.onCompleted: {
-        WatchPolygonProvider.requestAll()
+        refresh()
 
         map.addMapItemView(mapWatchView)
     }
 
     Component.onDestruction: {
         map.removeMapItemView(mapWatchView)
+    }
+
+    function refresh() {
+        WatchPolygonProvider.requestAll()
     }
 }

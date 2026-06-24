@@ -13,6 +13,7 @@ Item {
     property list<point> listPoint
 
     signal selectionFinished(listCoordinate: list<geoCoordinate>)
+    signal selectionCanceled()
 
     id: selectionHandler
     anchors.fill: parent
@@ -63,7 +64,7 @@ Item {
     }
 
     Rectangle {
-        width: childrenRect.width
+        width: 120
         height: childrenRect.height
         visible: parent.enabled
 
@@ -74,12 +75,12 @@ Item {
         z: 2
 
         RowLayout {
-            width: childrenRect.width
+            width: parent.width
             height: childrenRect.height
 
             ToolButton {
                 text: "Cancel"
-                onClicked: selectionHandler.enabled = false;
+                onClicked: selectionCanceled()
             }
 
             ToolButton {
@@ -92,8 +93,6 @@ Item {
                     }
 
                     selectionFinished(listCoordinate)
-
-                    selectionHandler.enabled = false;
                 }
             }
         }
@@ -119,6 +118,7 @@ Item {
         }
     }
 
+    // Reset the canvas, also free old data
     onEnabledChanged: {
         if (!enabled) {
             listPoint = []

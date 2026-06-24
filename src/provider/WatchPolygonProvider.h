@@ -7,6 +7,7 @@
 #include <QGeoCoordinate>
 
 #include <model/WatchPolygonModel.h>
+#include "dao/WatchPolygonDAO.h"
 
 class WatchPolygonProvider : public QObject
 {
@@ -18,9 +19,13 @@ public:
     // TODO: Read and Write signature doesn't match, but this is more convenient on the QML side
     Q_INVOKABLE void requestAll();
     Q_INVOKABLE void add(QList<QGeoCoordinate> listCoord);
+    Q_INVOKABLE bool remove(int id);
 
 signals:
     void dataReady(QList<WatchPolygonModel>);
+
+private:
+    WatchPolygonDAO m_dao{};
 };
 
 #endif // WATCHPOLYGONPROVIDER_H
