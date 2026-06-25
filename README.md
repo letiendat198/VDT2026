@@ -16,5 +16,5 @@
     - Overlay Hoàng Sa, Trường Sa
     - Check lại cái đống thread
     - Notification queue
-    - Cho phép sửa cài đặt postgres để còn package
+    - ~~Cho phép sửa cài đặt postgres để còn package~~
     - Package

@@ -68,7 +68,7 @@ Item {
             }
         }
 
-        MapWatchPolygonView {
+        MapWatchView {
             id: watchView
             map: map
         }
@@ -80,10 +80,9 @@ Item {
 
             onSelectionFinished: (listCoordinate) => {
                 WatchPolygonProvider.add(listCoordinate)
-
-                watchView.refresh()
-
                 this.enabled = false
+
+                refresh()
             }
 
             onSelectionCanceled: () => {

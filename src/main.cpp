@@ -2,14 +2,22 @@
 #include <QQmlApplicationEngine>
 #include <QLoggingCategory>
 #include <QQmlContext>
+#include <QSettings>
 
-#include <socket/Server.h>
+#include "socket/Server.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    app.setOrganizationName("VDT2026");
+    app.setOrganizationDomain("dat.gis.vdt2026");
+    app.setApplicationName("gisVDT");
 
-    Server infoServer(8888);
+    QSettings settings;
+    QString keyThunderforest = settings.value("keyThunderforest", "").toString();
+    int socketPort = settings.value("socketPort", 8888).toInt();
+
+    Server infoServer(socketPort);
 
     QQmlApplicationEngine engine;
     QObject::connect(
@@ -20,7 +28,7 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.loadFromModule("VDT2026", "Main");
 
-    engine.rootContext()->setContextProperty("THUNDERFOREST_API_KEY", qgetenv("THUNDERFOREST_API_KEY"));
+    engine.rootContext()->setContextProperty("THUNDERFOREST_API_KEY", keyThunderforest);
     qDebug() << qgetenv("THUNDERFOREST_API_KEY");
 
     QLoggingCategory::setFilterRules(QStringLiteral("qt.qml.binding.removal.info=true"));

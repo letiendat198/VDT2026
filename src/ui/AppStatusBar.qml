@@ -19,9 +19,7 @@ ToolBar {
 
         ToolSeparator {}
 
-        Item {
-            Layout.fillWidth: true
-        }
+        Item { Layout.fillWidth: true }
 
         ToolSeparator {}
 

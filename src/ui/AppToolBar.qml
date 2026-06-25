@@ -6,8 +6,11 @@ ToolBar {
     property alias selection: selectionBtn
     property alias refresh: refreshBtn
     property alias deleteSelection: deleteSelectionBtn
+    property alias preferences: preferencesBtn
 
     RowLayout {
+        anchors.fill: parent
+
         ButtonGroup {
             buttons: toolButtons.children
         }
@@ -49,6 +52,16 @@ ToolBar {
 
                 ToolTip.visible: hovered
                 ToolTip.text: qsTr("Refresh all data")
+            }
+
+            Item { Layout.fillWidth: true }
+
+            ToolButton {
+                id: preferencesBtn
+                text: qsTr("Preferences")
+
+                ToolTip.visible: hovered
+                ToolTip.text: qsTr("Change preferences")
             }
         }
     }

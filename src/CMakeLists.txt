@@ -24,7 +24,7 @@ qt_add_qml_module(appVDT2026
         ui/map/MapInfoPopup.qml
         ui/map/MapShipIndicator.qml
         ui/map/MapSelectionHandler.qml
-        ui/map/MapWatchPolygonView.qml
+        ui/map/MapWatchView.qml
         ui/map/MapNotification.qml
     SOURCES
         provider/ShipRadarInfoProvider.cpp provider/ShipRadarInfoProvider.h
@@ -32,22 +32,15 @@ qt_add_qml_module(appVDT2026
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
         model/ShipRadarInfoItemModel.h model/ShipRadarInfoItemModel.cpp
+        QML_FILES ui/Preferences.qml
+        QML_FILES ui/NoticeDialog.qml
+        SOURCES
 )
 
 qt_add_resources(appVDT2026 "images"
         PREFIX "/"
         FILES resources/marker.svg
 )
-
-# if(CMAKE_BUILD_TYPE MATCHES "Debug")
-#   set(
-#     CMAKE_CXX_FLAGS
-#     "${CMAKE_CXX_FLAGS} -Werror -fsanitize=undefined -fsanitize=address"
-#   )
-#   target_link_options(appVDT2026
-#     BEFORE PUBLIC -fsanitize=undefined PUBLIC -fsanitize=address
-#   )
-# endif()
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
