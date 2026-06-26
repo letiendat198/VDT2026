@@ -3,7 +3,14 @@
 #include <QtConcurrent>
 
 
-ShipRadarInfoItemModel::ShipRadarInfoItemModel(QObject *parent) : QAbstractListModel(parent), m_watcher(this){}
+ShipRadarInfoItemModel::ShipRadarInfoItemModel(QObject *parent) : QAbstractListModel(parent), m_watcher(this){
+    // This is on main thread, no need to lock
+    connect(&m_watcher, &QFutureWatcher<void>::finished, this, [this](){
+        if (!m_keyInsertBuffer.empty()) {
+            this->insertRows(m_keyLookup.size(), m_keyInsertBuffer.size(), QModelIndex());
+        }
+    });
+}
 
 int ShipRadarInfoItemModel::rowCount(const QModelIndex &parent) const
 {
@@ -45,9 +52,13 @@ bool ShipRadarInfoItemModel::insertRows(int row, int count, const QModelIndex &p
     return true;
 }
 
+// Remove all rows
 bool ShipRadarInfoItemModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    return false;
+    beginRemoveRows(QModelIndex(), 0, count - 1);
+    m_keyLookup.clear();
+    endRemoveRows();
+    return true;
 }
 
 QHash<int, QByteArray> ShipRadarInfoItemModel::roleNames() const
@@ -60,20 +71,19 @@ QHash<int, QByteArray> ShipRadarInfoItemModel::roleNames() const
 void ShipRadarInfoItemModel::update(QList<ShipRadarInfoModel> listShipInfo)
 {
     QFuture<void> future = QtConcurrent::run([this, listShipInfo](){
+        mutex.lock();
+
         this->parseData(listShipInfo);
+
+        mutex.unlock();
     });
 
     m_watcher.setFuture(future);
 
-    connect(&m_watcher, &QFutureWatcher<void>::finished, this, [this](){
-        if (!m_keyInsertBuffer.empty()) {
-            this->insertRows(m_keyLookup.size(), m_keyInsertBuffer.size(), QModelIndex());
-        }
-    });
-
     // qDebug() << m_keyLookup;
 }
 
+// On another thread
 void ShipRadarInfoItemModel::parseData(QList<ShipRadarInfoModel> listShipInfo)
 {
     Q_FOREACH(ShipRadarInfoModel ship, listShipInfo) {
@@ -87,5 +97,16 @@ void ShipRadarInfoItemModel::parseData(QList<ShipRadarInfoModel> listShipInfo)
             setData(index, QVariant::fromValue(ship), 0);
         }
     }
+}
+
+void ShipRadarInfoItemModel::clear()
+{
+    mutex.lock();
+
+    m_shipMap.clear();
+    m_keyInsertBuffer.clear();
+    removeRows(0, m_keyLookup.count(), QModelIndex());
+
+    mutex.unlock();
 }
 

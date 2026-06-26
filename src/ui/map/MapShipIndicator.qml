@@ -18,7 +18,6 @@ Item {
         sourceSize.width: 25
         sourceSize.height: 25
         asynchronous: true
-        mipmap: true
         transformOrigin: Item.Center
         rotation: angle
     }

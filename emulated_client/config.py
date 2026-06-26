@@ -5,7 +5,7 @@ cfg = {
     "targetPort": 8888,
     "clusters": [
         {
-            "entityCount": 100,
+            "entityCount": 1000,
             "interval": 1, # In seconds
             "initialDelay": 0, # In seconds
             "initialBoundPolygon": Polygon(((17.719230, 107.198103), (15.495328, 109.456255), (11.823654, 110.161928), (11.162869, 117.469560), (19.561649, 119.084766))), # Must be >= 3 vertex Polygon
@@ -14,7 +14,7 @@ cfg = {
             "angleDelta": [], # Empty for fixed angle
         },
         {
-            "entityCount": 100,
+            "entityCount": 1000,
             "interval": 1, # In seconds
             "initialDelay": 0, # In seconds
             "initialBoundPolygon": Polygon(((17.719230, 107.198103), (15.495328, 109.456255), (11.823654, 110.161928), (11.162869, 117.469560), (19.561649, 119.084766))), # Must be >= 3 vertex Polygon

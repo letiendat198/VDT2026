@@ -81,7 +81,7 @@ Item {
         running: true
         repeat: true
         onTriggered: {
-            refresh()
+            ShipRadarInfoProvider.requestAllLatest()
         }
     }
 
@@ -96,6 +96,7 @@ Item {
     }
 
     function refresh() {
+        shipModel.clear();
         ShipRadarInfoProvider.requestAllLatest()
     }
 

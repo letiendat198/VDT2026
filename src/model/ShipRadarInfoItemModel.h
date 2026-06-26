@@ -25,8 +25,12 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void update(QList<ShipRadarInfoModel> listShipInfo);
+    Q_INVOKABLE void clear();
 private:
     void parseData(QList<ShipRadarInfoModel> listShipInfo);
+
+    // Protect shipMap and keyInsertBuffer from race when clearing data while an update could be running
+    QMutex mutex{};
 
     QList<qint64> m_keyLookup{};
     QMap<qint64, ShipRadarInfoModel> m_shipMap{};
