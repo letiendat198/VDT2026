@@ -19,9 +19,6 @@ public:
 
 signals:
     void dataReady(QList<ShipRadarInfoModel>);
-
-private:
-    ShipRadarInfoDAO m_dao{};
 };
 
 #endif // SHIPRADARINFOPROVIDER_H

@@ -2,12 +2,15 @@
 
 #include <QSettings>
 
+// Open a new DB connection for each key (key should be unique for each thread)
 BaseDAO::BaseDAO(const QString &key) {
-    // Open a new connection for each key (key should be unique for each thread)
     if (QSqlDatabase::contains(key)) {
+        // qDebug() << "Using existed database for" << key;
         m_db = QSqlDatabase::database(key);
         return;
     }
+
+    qDebug() << "Creating database connection for" << key;
 
     QSettings settings;
     QString dbHost = settings.value("dbHost", "").toString();

@@ -26,20 +26,21 @@ qt_add_qml_module(appVDT2026
         ui/map/MapSelectionHandler.qml
         ui/map/MapWatchView.qml
         ui/map/MapNotification.qml
+        ui/Preferences.qml
+        ui/NoticeDialog.qml
     SOURCES
         provider/ShipRadarInfoProvider.cpp provider/ShipRadarInfoProvider.h
         model/ShipRadarInfoModel.cpp model/ShipRadarInfoModel.h
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
         model/ShipRadarInfoItemModel.h model/ShipRadarInfoItemModel.cpp
-        QML_FILES ui/Preferences.qml
-        QML_FILES ui/NoticeDialog.qml
-        SOURCES
 )
 
 qt_add_resources(appVDT2026 "images"
         PREFIX "/"
-        FILES resources/marker.svg
+        FILES
+             resources/marker.svg
+             resources/marker_highlighted.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -57,9 +58,10 @@ set_target_properties(appVDT2026 PROPERTIES
 find_package(Qt6 REQUIRED COMPONENTS Network)
 find_package(Qt6 REQUIRED COMPONENTS Sql)
 find_package(Qt6 REQUIRED COMPONENTS Positioning)
+find_package(Qt6 REQUIRED COMPONENTS Concurrent)
 
 target_link_libraries(appVDT2026
-        PRIVATE Qt6::Quick Qt6::Network Qt6::Sql Qt6::Positioning
+        PRIVATE Qt6::Quick Qt6::Network Qt6::Sql Qt6::Positioning Qt6::Concurrent
 )
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")

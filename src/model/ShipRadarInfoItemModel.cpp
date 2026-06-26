@@ -1,7 +1,9 @@
 #include "model/ShipRadarInfoItemModel.h"
 
+#include <QtConcurrent>
 
-ShipRadarInfoItemModel::ShipRadarInfoItemModel(QObject *parent) : QAbstractListModel(parent){}
+
+ShipRadarInfoItemModel::ShipRadarInfoItemModel(QObject *parent) : QAbstractListModel(parent), m_watcher(this){}
 
 int ShipRadarInfoItemModel::rowCount(const QModelIndex &parent) const
 {
@@ -57,24 +59,33 @@ QHash<int, QByteArray> ShipRadarInfoItemModel::roleNames() const
 
 void ShipRadarInfoItemModel::update(QList<ShipRadarInfoModel> listShipInfo)
 {
+    QFuture<void> future = QtConcurrent::run([this, listShipInfo](){
+        this->parseData(listShipInfo);
+    });
+
+    m_watcher.setFuture(future);
+
+    connect(&m_watcher, &QFutureWatcher<void>::finished, this, [this](){
+        if (!m_keyInsertBuffer.empty()) {
+            this->insertRows(m_keyLookup.size(), m_keyInsertBuffer.size(), QModelIndex());
+        }
+    });
+
+    // qDebug() << m_keyLookup;
+}
+
+void ShipRadarInfoItemModel::parseData(QList<ShipRadarInfoModel> listShipInfo)
+{
     Q_FOREACH(ShipRadarInfoModel ship, listShipInfo) {
         if (!m_shipMap.contains(ship.shipId())) {
             m_keyInsertBuffer.append(ship.shipId());
             m_shipMap[ship.shipId()] = ship;
         }
-
         else {
             QModelIndex index = createIndex(m_keyLookup.indexOf(ship.shipId()), 0);
             // qDebug() << "Data already exists at index: "<< index.row();
             setData(index, QVariant::fromValue(ship), 0);
         }
     }
-
-
-    if (!m_keyInsertBuffer.empty()) {
-        insertRows(m_keyLookup.size(), m_keyInsertBuffer.size(), QModelIndex());
-    }
-
-    // qDebug() << m_keyLookup;
 }
 

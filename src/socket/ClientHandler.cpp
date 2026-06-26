@@ -34,7 +34,7 @@ void ClientHandler::onClientIncoming(int key) {
 
     if (!client) return;
 
-    ReadHandler *readRunnable = new ReadHandler(client, key);
+    ReadHandler *readRunnable = new ReadHandler(client);
     QThreadPool::globalInstance()->start(readRunnable);
 }
 

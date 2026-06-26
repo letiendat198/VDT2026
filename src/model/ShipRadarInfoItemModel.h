@@ -5,6 +5,7 @@
 #include <QQmlEngine>
 #include <QAbstractListModel>
 #include <QMap>
+#include <QFutureWatcher>
 
 #include "model/ShipRadarInfoModel.h"
 
@@ -25,10 +26,13 @@ public:
 
     Q_INVOKABLE void update(QList<ShipRadarInfoModel> listShipInfo);
 private:
+    void parseData(QList<ShipRadarInfoModel> listShipInfo);
+
     QList<qint64> m_keyLookup{};
     QMap<qint64, ShipRadarInfoModel> m_shipMap{};
 
     QList<qint64> m_keyInsertBuffer{};
+    QFutureWatcher<void> m_watcher{};
 
 
 };
