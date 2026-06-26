@@ -7,8 +7,10 @@ import VDT2026
 
 Item {
     required property Map map
+    property bool lazyLoading: true
 
     property int shipCount : 0
+    property geoPolygon visiblePolygon
 
     signal shipEnteredWatchZone(shipId: int, listWatchId: list<int>)
 
@@ -45,6 +47,7 @@ Item {
             }
 
             Component.onCompleted: {
+                // console.log("Marker for " + shipData.shipId + " initialized");
                 ready = true
             }
 
@@ -96,7 +99,15 @@ Item {
     }
 
     function refresh() {
-        ShipRadarInfoProvider.requestAllLatest()
+        if (!lazyLoading) ShipRadarInfoProvider.requestAllLatest();
+        else {
+            var visibleRegion = map.visibleRegion;
+            visiblePolygon = QtPositioning.shapeToPolygon(visibleRegion);
+            // Qt doc hasn't update yet
+            // https://doc.qt.io/qt-6/qml-geoshape.html is outdated
+            // https://doc.qt.io/qt-6/qtpositioning-changes-qt6.html this actually show path was renamed perimeter
+            ShipRadarInfoProvider.requestAllLatestWithin(visiblePolygon.perimeter);
+        }
     }
 
     Component.onCompleted: {

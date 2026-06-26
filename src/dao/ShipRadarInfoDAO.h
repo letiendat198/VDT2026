@@ -14,6 +14,8 @@ public:
     bool insertMany(QList<ShipRadarInfoModel> listInfo);
 
     QList<ShipRadarInfoModel> getAllLastest();
+    // Same as getAllLastest(), but only within region. For lazy-loading
+    QList<ShipRadarInfoModel> getAllLastestWithin(const QList<QGeoCoordinate> &polygon);
     ShipRadarInfoModel getLastestByShipId(qint64 id);
     QList<ShipRadarInfoModel> getFromTimeByShipId(qint64 id, const QDateTime &timestamp);
 };

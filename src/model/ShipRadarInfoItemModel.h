@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QAbstractListModel>
-#include <QMap>
+#include <QList>
 #include <QFutureWatcher>
 
 #include "model/ShipRadarInfoModel.h"
@@ -28,11 +28,11 @@ public:
 private:
     void parseData(QList<ShipRadarInfoModel> listShipInfo);
 
-    QList<qint64> m_keyLookup{};
-    QMap<qint64, ShipRadarInfoModel> m_shipMap{};
+    QList<ShipRadarInfoModel> m_shipList{};
 
-    QList<qint64> m_keyInsertBuffer{};
-    QFutureWatcher<void> m_watcher{};
+    int m_insertCount{};
+    int m_removeCount{};
+    QFutureWatcher<void> m_watcher;
 
 
 };

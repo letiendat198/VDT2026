@@ -18,7 +18,7 @@ BaseDAO::BaseDAO(const QString &key) {
     QString dbName = settings.value("dbName", "").toString();
     QString dbUsername = settings.value("dbUsername", "").toString();
     QString dbPassword = settings.value("dbPassword", "").toString();
-    qDebug() <<dbHost;
+    // qDebug() <<dbHost;
 
     m_db = QSqlDatabase::addDatabase("QPSQL", key);
 

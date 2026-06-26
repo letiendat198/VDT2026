@@ -19,7 +19,7 @@
     - ~~Cho phép sửa cài đặt postgres để còn package~~
     - Package
     - ~~Fix memory leak~~ (Không có memory leak ở Ba Sing Se...) (But fr ko hiểu sao trước đó memory cứ tăng dần, giờ lại bình thường) 
-    - Error popup
+    - Error popup, dừng timer nếu ko connect đc database
     - ~~Fix lỗi mỗi lần read dùng 1 thread, không dùng lại db được~~
     - Cẩn thận nếu spawn nhiều runnable, rồi giảm số lượng, sẽ có thread bị orphan dẫn đến
     db connection cũng bị orphan, làm tốn tài nguyên. Tìm cách close DB khi thread exit

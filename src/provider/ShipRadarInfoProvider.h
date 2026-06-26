@@ -16,6 +16,7 @@ class ShipRadarInfoProvider : public QObject
 public:
     ShipRadarInfoProvider(QObject *parent = nullptr);
     Q_INVOKABLE void requestAllLatest();
+    Q_INVOKABLE void requestAllLatestWithin(const QList<QGeoCoordinate> &polygon);
 
 signals:
     void dataReady(QList<ShipRadarInfoModel>);

@@ -1,4 +1,5 @@
 #include "ShipRadarInfoDAO.h"
+#include "WatchPolygonModel.h"
 #include "utils/WKBConverter.h"
 
 #include <QSqlQuery>
@@ -55,6 +56,66 @@ QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastest() {
                   "LEFT JOIN watch_polygon ON ST_COVERS(watch_polygon.polygon, ship_radar_info.coordinate) "
                   "WHERE ship_radar_info.id IN (SELECT MAX(ship_radar_info.id) FROM ship_radar_info GROUP BY ship_id);");
     if (!ok) qDebug() << query.lastError();
+
+    ok = query.exec();
+    if (!ok) qDebug() << query.lastError();
+
+    QHash<qint64, ShipRadarInfoModel> mapModel;
+
+    while (query.next()) {
+        qint64 shipId = query.value(4).toLongLong();
+        QVariant watchPolygonIdValue = query.value(5);
+        bool crossesWatchPolygon = watchPolygonIdValue.isValid() == true && watchPolygonIdValue.isNull() == false;
+
+        // JOIN can produce duplicates (because one ship can belongs to many watch polygons)
+        // So check if existed, if yes then just add watch polygon id to existing list
+        if (mapModel.contains(shipId)) {
+            if (!crossesWatchPolygon) continue;
+
+            int watchPolygonId = watchPolygonIdValue.toInt();
+            mapModel[shipId].addCrossedWatchPolygon(watchPolygonId);
+        }
+        else {
+            QGeoCoordinate coord = WKBConverter(query.value(0).toByteArray()).toCoord();
+            qreal speed = query.value(1).toReal();
+            qreal angle = query.value(2).toReal();
+            QDateTime timestamp = query.value(3).toDateTime();
+
+            ShipRadarInfoModel model;
+            model.setShipId(shipId);
+            model.setCoord(coord);
+            model.setSpeed(speed);
+            model.setAngle(angle);
+            model.setTimestamp(timestamp);
+            if (crossesWatchPolygon) {
+                int watchPolygonId = watchPolygonIdValue.toInt();
+                model.addCrossedWatchPolygon(watchPolygonId);
+            }
+
+            mapModel[shipId] = model;
+        }
+    }
+
+    return mapModel.values();
+}
+
+// Honestly consider merging it with normal get
+QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastestWithin(const QList<QGeoCoordinate> &polygon)
+{
+    QSqlQuery query(m_db);
+
+    // Id is auto incrementing, max id should be lastest
+    // Ship id should be unique too!
+    bool ok = query.prepare("SELECT ST_AsBinary(coordinate), speed, angle, timestamp, ship_id, watch_polygon.id "
+                            "FROM ship_radar_info "
+                            "LEFT JOIN watch_polygon ON ST_COVERS(watch_polygon.polygon, ship_radar_info.coordinate) "
+                            "WHERE ship_radar_info.id IN (SELECT MAX(ship_radar_info.id) FROM ship_radar_info GROUP BY ship_id) "
+                            "AND ST_COVERS(?, ship_radar_info.coordinate);");
+    if (!ok) qDebug() << query.lastError();
+
+    // It's not actually a watch polygon, but since WatchPolygon has a convenient WKT util so we borrow it :D
+    WatchPolygonModel watchPolygon = WatchPolygonModel(0, polygon);
+    query.addBindValue(watchPolygon.toWKT());
 
     ok = query.exec();
     if (!ok) qDebug() << query.lastError();
