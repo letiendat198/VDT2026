@@ -19,6 +19,7 @@ Item {
             color: Qt.rgba(1, 1, 0, 0.3)
             border.color: Qt.rgba(1, 1, 0, 1)
             border.width: 1
+            referenceSurface: "Globe"
 
             path: modelData.listCoord
         }

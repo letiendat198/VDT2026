@@ -44,6 +44,13 @@ Item {
             enabled: !selectionHandler.enabled
         }
 
+        PinchHandler {
+            target: null
+            onScaleChanged: (delta) => {
+                map.zoomLevel *= delta
+            }
+        }
+
         DragHandler {
             id: drag
             target: null

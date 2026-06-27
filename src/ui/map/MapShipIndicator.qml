@@ -22,6 +22,13 @@ Item {
         rotation: angle
     }
 
+    // Rectangle {
+    //     anchors.centerIn: shipMarker
+
+    //     width: 5
+    //     height: 5
+    // }
+
     TapHandler {
         id: tapHandler
         parent: shipMarker
