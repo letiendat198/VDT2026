@@ -33,7 +33,7 @@ qt_add_qml_module(appVDT2026
         model/ShipRadarInfoModel.cpp model/ShipRadarInfoModel.h
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
-        model/ShipRadarInfoItemModel.h model/ShipRadarInfoItemModel.cpp
+        ui/model/ShipRadarInfoItemModel.h ui/model/ShipRadarInfoItemModel.cpp
 )
 
 qt_add_resources(appVDT2026 "images"
@@ -69,6 +69,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 # TODO: Split this CMake files so it look less ugly
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/model")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/provider")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ui/model")
 
 install(TARGETS appVDT2026
     BUNDLE DESTINATION .

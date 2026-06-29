@@ -12,10 +12,12 @@ from concurrent.futures import ThreadPoolExecutor
 import uuid
 from geographiclib.constants import Constants
 from geographiclib.geodesic import Geodesic
+import threading
 
 from config import cfg
 
 shipIdCounter = 0
+lock = threading.Lock()
 
 class Ship:
     def __init__(self, id: int, initPos: Point, initAngle: float, initSpeed: float) -> None:
@@ -64,9 +66,13 @@ def init(cluster) -> List[Ship]:
             raise Exception("Not supported argument number")
 
         # Use a counter so ship ID stay the same, so client won't show tons of ships and can continue to update after restarting
+        global lock
         global shipIdCounter
+
+        lock.acquire()
         id = shipIdCounter
         shipIdCounter += 1
+        lock.release()
 
         listShip.append(Ship(id, randomInitial[i], initAngle, initSpeed))
 

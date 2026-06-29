@@ -1,4 +1,4 @@
-#include "model/ShipRadarInfoItemModel.h"
+#include "ui/model/ShipRadarInfoItemModel.h"
 
 #include <QtConcurrent>
 

@@ -11,6 +11,7 @@ void ClientHandler::addClient(QTcpSocket *socket) {
     // Socket needs to be connected, otherwise there won't be port number
     Q_ASSERT(socket->state() == QAbstractSocket::ConnectedState);
 
+    // TODO: Change this to actual unique identifier
     int clientPort = socket->peerPort();
 
     connect(socket, &QTcpSocket::disconnected, this, [this, clientPort](){

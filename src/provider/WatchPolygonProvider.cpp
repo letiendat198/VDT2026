@@ -10,11 +10,11 @@ void WatchPolygonProvider::requestAll()
     emit dataReady(m_dao.getAll());
 }
 
-void WatchPolygonProvider::add(QList<QGeoCoordinate> listCoord)
+bool WatchPolygonProvider::add(QList<QGeoCoordinate> listCoord)
 {
     // qDebug() << "Inserting a watch polygon";
 
-    m_dao.insert(WatchPolygonModel(listCoord));
+    return m_dao.insert(WatchPolygonModel(listCoord));
 }
 
 bool WatchPolygonProvider::remove(int id)

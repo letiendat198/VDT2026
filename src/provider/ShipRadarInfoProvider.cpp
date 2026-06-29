@@ -12,6 +12,7 @@ void ShipRadarInfoProvider::requestAllLatest() {
         quintptr threadAddr = reinterpret_cast<quintptr>(QThread::currentThread());
         ShipRadarInfoDAO dao = ShipRadarInfoDAO(QString::number(threadAddr));
         QList<ShipRadarInfoModel> data = dao.getAllLastest();
+
         emit dataReady(data);
     });
 }

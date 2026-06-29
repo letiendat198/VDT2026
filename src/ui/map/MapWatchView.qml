@@ -16,7 +16,7 @@ Item {
         id: mapWatchDelegate
 
         MapPolygon {
-            color: Qt.rgba(1, 1, 0, 0.3)
+            color: Qt.rgba(1, 1, 0, 0.2)
             border.color: Qt.rgba(1, 1, 0, 1)
             border.width: 1
             referenceSurface: "Globe"
@@ -35,6 +35,8 @@ Item {
             anchorPoint.x: watchAnoteItem.x + watchAnoteItem.width / 2
             anchorPoint.y: watchAnoteItem.y + watchAnoteItem.height
 
+            z: 1
+
             sourceItem: Item {
                 id: watchAnoteItem
                 width: childrenRect.width
@@ -45,12 +47,15 @@ Item {
                     Text {
                         id: watchId
                         text: "ID %1".arg(modelData.id)
+                        font.pixelSize: 20
 
                         color: "white"
                     }
 
                     ToolButton {
                         id: watchDeleteBtn
+
+                        anchors.verticalCenter: watchId.verticalCenter
 
                         visible: deleteMode ? true : false
                         onClicked: {

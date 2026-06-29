@@ -64,20 +64,18 @@ Item {
             z: 99
         }
 
+        MapWatchView {
+            id: watchView
+            map: map
+        }
+
         MapShipView {
             id: shipView
             map: map
 
             onShipEnteredWatchZone: (shipId, listWatchId) => {
-                var title = "Watch zone alert"
-                var body = "Ship ID %1 has enterred watch zone%2 ID %3".arg(shipId).arg(listWatchId.length > 1 ? "s" : "").arg(listWatchId.join(", "))
-                notification.show(title, body)
+                notification.add(shipId, listWatchId)
             }
-        }
-
-        MapWatchView {
-            id: watchView
-            map: map
         }
 
         MapSelectionHandler {

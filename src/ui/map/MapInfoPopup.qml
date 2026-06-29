@@ -6,15 +6,15 @@ import VDT2026
 
 Popup {
     property shipRadarInfo shipData
-    property Item target
+    property int margin : 10
 
     modal: true
     focus: true
     width: 320
     height: 200
 
-    x: target ? target.x + target.width : 10
-    y: target ? target.y + target.height : 10
+    x: 10
+    y: 10
 
     background: Rectangle {
         color: Qt.rgba(1,1,1,0.8)
@@ -22,9 +22,12 @@ Popup {
 
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    function openFor(t: Item, d: shipRadarInfo) {
-        target = t
+    function openAt(xNew, yNew, d: shipRadarInfo) {
+        x = xNew + margin
+        y = yNew + margin
         shipData = d
+
+        console.log(xNew + " " + yNew)
 
         open()
     }

@@ -35,8 +35,7 @@ Item {
             anchorPoint.x: shipIndicator.width / 2
             anchorPoint.y: shipIndicator.height / 2
 
-            width: shipIndicator.width
-            height: shipIndicator.height
+            // zoomLevel: 8
 
             sourceItem: MapShipIndicator {
                 id: shipIndicator
@@ -62,7 +61,8 @@ Item {
             Connections {
                 target: shipIndicator.shipTapHandler
                 function onTapped() {
-                    infoPopup.openFor(mapItem, shipData)
+                    var p = map.fromCoordinate(shipData.coord)
+                    infoPopup.openAt(p.x, p.y, shipData)
                 }
             }
         }
