@@ -46,6 +46,20 @@ Rectangle {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
 
+                text: "<<"
+            }
+
+            onClicked: {
+                index = 0
+                forceLatest = false
+            }
+        }
+
+        ToolButton {
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+
                 text: "<"
             }
 
@@ -72,6 +86,20 @@ Rectangle {
             onClicked: {
                 if (index < listShipId.length - 1) ++index
                 forceLatest = false
+            }
+        }
+
+        ToolButton {
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+
+                text: ">>"
+            }
+
+            onClicked: {
+                index = listShipId.length - 1
+                forceLatest = true
             }
         }
 
