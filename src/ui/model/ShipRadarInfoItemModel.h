@@ -5,7 +5,7 @@
 #include <QQmlEngine>
 #include <QAbstractListModel>
 #include <QMap>
-#include <QFutureWatcher>
+#include <QSemaphore>
 
 #include "model/ShipRadarInfoModel.h"
 
@@ -30,13 +30,14 @@ private:
     void parseData(QList<ShipRadarInfoModel> listShipInfo);
 
     // Protect shipMap and keyInsertBuffer from race when clearing data while an update could be running
-    QMutex mutex{};
+    // Binary semaphore because mutex can't be freed from another thread
+    QSemaphore m_semaphore{};
 
     QList<qint64> m_keyLookup{};
+    QMap<qint64, int> m_indexLookup{};
     QMap<qint64, ShipRadarInfoModel> m_shipMap{};
 
     QList<qint64> m_keyInsertBuffer{};
-    QFutureWatcher<void> m_watcher{};
 
 
 };

@@ -39,7 +39,11 @@ public:
     void setShipId(qint64 newShipId);
 
     QList<int> listCrossedWatchPolygonId() const;
+    void setListCrossedWatchPolygonId(const QList<int> &newList);
+
     void addCrossedWatchPolygon(int id);
+
+    void copyExceptCrossedWatchPolygon(const ShipRadarInfoModel &ship);
 
 private:
     qint64 m_shipId{};

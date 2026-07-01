@@ -90,14 +90,14 @@ Item {
         function onDataReady(data) {
             // console.log("Data ready")
             shipModel.update(data)
-            shipCount = data.length
+            shipCount = shipModel.rowCount()
             // console.log(data)
         }
     }
 
     function refresh() {
         shipModel.clear();
-        ShipRadarInfoProvider.requestAllLatest()
+        // ShipRadarInfoProvider.requestAllLatest()
     }
 
     Component.onCompleted: {

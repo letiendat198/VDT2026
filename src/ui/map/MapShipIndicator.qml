@@ -1,9 +1,9 @@
 import QtQuick
 
 Item {
-    required property bool highlighted
     required property real angle
 
+    property bool highlighted : false
     property alias shipTapHandler: tapHandler
 
     // Need to explicitly set the width and height so it can be used to anchor the marker

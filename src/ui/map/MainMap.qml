@@ -87,7 +87,7 @@ Item {
                 WatchPolygonProvider.add(listCoordinate)
                 this.enabled = false
 
-                refresh()
+                watchView.refresh()
             }
 
             onSelectionCanceled: () => {

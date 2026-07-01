@@ -68,9 +68,23 @@ QList<int> ShipRadarInfoModel::listCrossedWatchPolygonId() const
     return m_listCrossedWatchPolygonId;
 }
 
+void ShipRadarInfoModel::setListCrossedWatchPolygonId(const QList<int> &newList)
+{
+    m_listCrossedWatchPolygonId = newList;
+}
+
 void ShipRadarInfoModel::addCrossedWatchPolygon(int id)
 {
     m_listCrossedWatchPolygonId.append(id);
+}
+
+void ShipRadarInfoModel::copyExceptCrossedWatchPolygon(const ShipRadarInfoModel &ship)
+{
+    setShipId(ship.shipId());
+    setCoord(ship.coord());
+    setAngle(ship.angle());
+    setSpeed(ship.speed());
+    setTimestamp(ship.timestamp());
 }
 
 QDataStream &operator<<(QDataStream &stream, const ShipRadarInfoModel &shipInfo) {
