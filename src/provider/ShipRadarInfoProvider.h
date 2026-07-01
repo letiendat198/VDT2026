@@ -56,6 +56,7 @@ private:
     QMutex m_lock{};
     QMap<qint64, ShipRadarInfoModel> m_shipMap{};
     QFuture<void> m_populateFromDbTask;
+    QAtomicInteger<int> m_writtenRecordCount{};
 };
 
 #endif // SHIPRADARINFOPROVIDER_H

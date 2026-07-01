@@ -79,8 +79,6 @@ def init(cluster) -> List[Ship]:
     return listShip
 
 def makeMessage(listShip: List[Ship]) -> bytes:
-    message = b'\x00'
-
     listBytes = []
 
     for ship in listShip:
@@ -88,7 +86,9 @@ def makeMessage(listShip: List[Ship]) -> bytes:
 
     body = b''.join(listBytes)
 
-    message = message + pack('!I', len(body)) + body
+    message = b'\x00' + pack('!I', len(body)) + body
+
+    print(len(body))
 
     return message
 

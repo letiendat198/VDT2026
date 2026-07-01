@@ -1,6 +1,7 @@
 #include "ui/model/ShipRadarInfoItemModel.h"
 
 #include <QtConcurrent>
+#include <QDateTime>
 
 
 ShipRadarInfoItemModel::ShipRadarInfoItemModel(QObject *parent) : QAbstractListModel(parent), m_semaphore(1) {}
@@ -13,6 +14,8 @@ int ShipRadarInfoItemModel::rowCount(const QModelIndex &parent) const
 QVariant ShipRadarInfoItemModel::data(const QModelIndex &index, int role) const
 {
     qint64 key = m_keyLookup[index.row()];
+
+    // qDebug() << "d" << key << ":" << QDateTime::currentDateTime().toMSecsSinceEpoch();
 
     return QVariant::fromValue(m_shipMap[key]);
 }
@@ -36,7 +39,7 @@ Qt::ItemFlags ShipRadarInfoItemModel::flags(const QModelIndex &index) const
 
 bool ShipRadarInfoItemModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    qDebug() << "Inserting" << count << "rows";
+    // qDebug() << "Inserting" << count << "rows";
 
     int startPos = m_keyLookup.size();
 

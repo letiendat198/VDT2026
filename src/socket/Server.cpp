@@ -15,11 +15,11 @@ Server::~Server() {
 }
 
 void Server::onNewConnection() {
-    qDebug() << "New connection";
+    // qDebug() << "New connection";
 }
 
 void Server::onPendingConnectionAvailable() {
-    qDebug() << "Pending connection";
+    // qDebug() << "Pending connection";
 
     QTcpSocket *client = m_server.nextPendingConnection();
 

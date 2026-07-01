@@ -46,7 +46,7 @@ void ShipRadarInfoProvider::update(QList<ShipRadarInfoModel> data)
 
         m_lock.unlock();
 
-        this->writeBackToDb(data);
+        this->writeBackToDb(std::move(data));
     // });
 }
 
@@ -59,14 +59,23 @@ bool ShipRadarInfoProvider::writeBackToDb(QList<ShipRadarInfoModel> data)
 
     ShipRadarInfoDAO shipInfoDAO(QString::number(threadAddr));
 
-    return shipInfoDAO.insertMany(data);
+    bool ok = shipInfoDAO.insertMany(data);
+
+    if (m_writtenRecordCount < m_shipMap.size()) m_writtenRecordCount += data.size();
+
+    return ok;
 }
 
+// If this is called before new data is written back to the database
+// It will populate on old data, which cause wrong highlighting at the start
 void ShipRadarInfoProvider::populateIntrudeDataFromDb()
 {
+    // Rougly make sure that new data is written before populating
+    if (m_writtenRecordCount < m_shipMap.size()) return;
+
     quintptr threadAddr = reinterpret_cast<quintptr>(QThread::currentThread());
     ShipRadarInfoDAO dao = ShipRadarInfoDAO(QString::number(threadAddr));
-    QList<ShipRadarInfoModel> data = dao.getAllLastest();
+    QList<ShipRadarInfoModel> data = dao.getAllLatestWatchOnly();
 
     Q_FOREACH(ShipRadarInfoModel ship, data) {
         if (!m_shipMap.contains(ship.shipId())) continue;

@@ -35,24 +35,22 @@ Item {
             anchorPoint.x: shipIndicator.width / 2
             anchorPoint.y: shipIndicator.height / 2
 
+            // Zoom level is borked
             // zoomLevel: 8
 
             sourceItem: MapShipIndicator {
                 id: shipIndicator
                 angle: shipData.angle
                 highlighted: shipData.listCrossedWatchPolygonId.length > 0
-            }
-
-            Component.onCompleted: {
-                ready = true
+                width: (map.zoomLevel * 25) / 16
+                height: (map.zoomLevel * 25) / 16
             }
 
             // Have to define connections outside, cause inside sourceItem don't have shipData context
             Connections {
                 target: shipIndicator
                 function onHighlightedChanged() {
-                    // Avoid triggering highlight changed signal when initing
-                    if (ready && shipIndicator.highlighted) {
+                    if (shipIndicator.highlighted) {
                         shipEnteredWatchZone(shipData.shipId, shipData.listCrossedWatchPolygonId)
                     }
                 }

@@ -33,8 +33,12 @@ void ClientHandler::onClientIncoming(int key) {
     // qDebug() << "Client" << key << "have something to share";
     QPointer<QTcpSocket> client = m_mapClient[key];
 
+    qDebug() << (QThread::currentThread() != this->thread() ? "readyRead slot called on another thread" : "readyRead slot called on main thread");
+
     if (!client) return;
 
+    // Reading the socket from another thread makes this slot returns before data is actually read
+    // Which will cause readyRead to be emitted recursively
     ReadHandler *readRunnable = new ReadHandler(client);
     QThreadPool::globalInstance()->start(readRunnable);
 }

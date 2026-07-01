@@ -14,6 +14,7 @@ public:
     bool insertMany(QList<ShipRadarInfoModel> listInfo);
 
     QList<ShipRadarInfoModel> getAllLastest();
+    QList<ShipRadarInfoModel> getAllLatestWatchOnly();
     ShipRadarInfoModel getLastestByShipId(qint64 id);
     QList<ShipRadarInfoModel> getFromTimeByShipId(qint64 id, const QDateTime &timestamp);
 };

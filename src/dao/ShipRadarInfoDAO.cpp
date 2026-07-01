@@ -98,6 +98,51 @@ QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLastest() {
     return mapModel.values();
 }
 
+QList<ShipRadarInfoModel> ShipRadarInfoDAO::getAllLatestWatchOnly()
+{
+    QSqlQuery query(m_db);
+
+    // Id is auto incrementing, max id should be lastest
+    // Ship id should be unique too!
+    bool ok = query.prepare("SELECT ship_id, watch_polygon.id "
+                            "FROM ship_radar_info "
+                            "LEFT JOIN watch_polygon ON ST_COVERS(watch_polygon.polygon, ship_radar_info.coordinate) "
+                            "WHERE ship_radar_info.id IN (SELECT MAX(ship_radar_info.id) FROM ship_radar_info GROUP BY ship_id);");
+    if (!ok) qDebug() << query.lastError();
+
+    ok = query.exec();
+    if (!ok) qDebug() << query.lastError();
+
+    QHash<qint64, ShipRadarInfoModel> mapModel;
+
+    while (query.next()) {
+        qint64 shipId = query.value(0).toLongLong();
+        QVariant watchPolygonIdValue = query.value(1);
+        bool crossesWatchPolygon = watchPolygonIdValue.isValid() == true && watchPolygonIdValue.isNull() == false;
+
+        // JOIN can produce duplicates (because one ship can belongs to many watch polygons)
+        // So check if existed, if yes then just add watch polygon id to existing list
+        if (mapModel.contains(shipId)) {
+            if (!crossesWatchPolygon) continue;
+
+            int watchPolygonId = watchPolygonIdValue.toInt();
+            mapModel[shipId].addCrossedWatchPolygon(watchPolygonId);
+        }
+        else {
+            ShipRadarInfoModel model;
+            model.setShipId(shipId);
+            if (crossesWatchPolygon) {
+                int watchPolygonId = watchPolygonIdValue.toInt();
+                model.addCrossedWatchPolygon(watchPolygonId);
+            }
+
+            mapModel[shipId] = model;
+        }
+    }
+
+    return mapModel.values();
+}
+
 ShipRadarInfoModel ShipRadarInfoDAO::getLastestByShipId(qint64 id) {
     QSqlQuery query(m_db);
 
