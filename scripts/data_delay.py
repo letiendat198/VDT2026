@@ -3,7 +3,7 @@ avg = 1
 ship_recv = {}
 ship_display = {}
 
-with open("data_delay_5000.log", "r") as f:
+with open("data_delay_10000.log", "r") as f:
     for line in f:
         if (not line.startswith("d") and not line.startswith("r")):
             continue
@@ -18,7 +18,8 @@ with open("data_delay_5000.log", "r") as f:
             ship_display[id] = int(millis.strip())
 
 for id in ship_recv.keys():
-    print(avg)
-    avg = (avg + abs(ship_display[id] - ship_recv[id])) / 2
+    avg += abs(ship_display[id] - ship_recv[id])
+
+avg /= len(ship_recv)
 
 print("Average delay:", avg,"ms")

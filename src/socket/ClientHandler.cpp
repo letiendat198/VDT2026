@@ -33,13 +33,38 @@ void ClientHandler::onClientIncoming(int key) {
     // qDebug() << "Client" << key << "have something to share";
     QPointer<QTcpSocket> client = m_mapClient[key];
 
-    qDebug() << (QThread::currentThread() != this->thread() ? "readyRead slot called on another thread" : "readyRead slot called on main thread");
+    // qDebug() << (QThread::currentThread() != this->thread() ? "readyRead slot called on another thread" : "readyRead slot called on main thread");
 
     if (!client) return;
+    // Either read or fail fast
+    if (client->bytesAvailable() < 5) return;
 
-    // Reading the socket from another thread makes this slot returns before data is actually read
-    // Which will cause readyRead to be emitted recursively
-    ReadHandler *readRunnable = new ReadHandler(client);
+    client->startTransaction();
+
+    // Read in main thread because QTcpSocket is not thread-safe
+    // If reading from another thread, this slot will return before all data is read from the socket
+    // Which causes readyRead signal to be emitted again, and again
+    // Which spam the threadpool, and potentially corrupt the data stream
+    QByteArray header = client->read(5);
+    QDataStream inHeader(header);
+
+    quint8 method;
+    quint32 size;
+    inHeader >> method;
+    inHeader >> size;
+
+    // qDebug() << "Message method" << method;
+    // qDebug() << "Message size" << size;
+
+    QByteArray data = client->read(size);
+    if (data.size() < size) {
+        client->rollbackTransaction();
+        return;
+    }
+
+    client->commitTransaction();
+
+    ReadHandler *readRunnable = new ReadHandler(std::move(data));
     QThreadPool::globalInstance()->start(readRunnable);
 }
 

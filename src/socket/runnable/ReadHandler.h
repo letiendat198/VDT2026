@@ -9,11 +9,11 @@
 class ReadHandler : public QRunnable
 {
 public:
-    ReadHandler(QPointer<QTcpSocket> socket);
+    ReadHandler(QByteArray data);
 private:
     void run() override;
 
-    QPointer<QTcpSocket> m_socket{};
+    QByteArray m_data;
 };
 
 #endif // READHANDLER_H
