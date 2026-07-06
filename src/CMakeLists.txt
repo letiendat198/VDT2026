@@ -34,6 +34,7 @@ qt_add_qml_module(appVDT2026
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
         ui/model/ShipRadarInfoItemModel.h ui/model/ShipRadarInfoItemModel.cpp
+        RESOURCES resources/gisVDT.desktop
 )
 
 qt_add_resources(appVDT2026 "images"
@@ -65,14 +66,47 @@ target_link_libraries(appVDT2026
 )
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
-# QML expects to find C++ elements headers in root(?), so we include these to satisfy the QML overlord
+# QML expects to find C++ elements headers in project root(?), so we include these to satisfy the QML overlord
 # TODO: Split this CMake files so it look less ugly
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/model")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/provider")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ui/model")
+
+# Packaging stuffs
+
+set(PACKAGE_INSTALL_PREFIX "/opt/${PROJECT_NAME}")
 
 install(TARGETS appVDT2026
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+qt_generate_deploy_qml_app_script(TARGET appVDT2026
+        OUTPUT_SCRIPT QT_INSTALL_SCRIPT
+        EXCLUDE_PLUGINS qsqlmimer qsqlite qsqlmysql qsqloci # Qt tries to include all the sqldriver libs, whose depends on non-free libs we don't have
+)
+
+install(SCRIPT "${QT_INSTALL_SCRIPT}")
+
+# Install the symlink to /usr/bin so desktop entry command works
+# execute_process(COMMAND ln -s ${PACKAGE_INSTALL_PREFIX}/bin/appVDT2026 appVDT2026)
+
+# install(FILES ${CMAKE_INSTALL_BINDIR}/appVDT2026 DESTINATION /usr/bin/appVDT2026 COMPONENT appVDT2026)
+
+# # Install the .desktop entry
+# install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/gisVDT.desktop DESTINATION ~/.local/share/applications)
+
+set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_GENERATOR "RPM")
+set(CPACK_PACKAGE_NAME "gisVDT")
+set(CPACK_DEVEL_PACKAGE_DESCRIPTION "Package for VDT 2026 Mini Project")
+set(CPACK_PACKAGE_RELEASE 1)
+set(CPACK_PACKAGE_CONTACT "Le Tien Dat")
+set(CPACK_PACKAGE_VENDOR "Le Tien Dat")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGING_INSTALL_PREFIX ${PACKAGE_INSTALL_PREFIX})
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
+
+include(CPack)

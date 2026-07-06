@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GisVDT
+Comment=Mini project for VDT
+Exec=appVDT2026
+Keywords=vdt;gis;
+StartupNotify=true
+Terminal=false

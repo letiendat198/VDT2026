@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 # list(APPEND CMAKE_PREFIX_PATH "~/Applications/Qt/6.11.1/gcc_64")
 
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/package/")
+
 project(VDT2026 VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
