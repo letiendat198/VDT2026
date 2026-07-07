@@ -12,6 +12,7 @@ Item {
     property alias zoomLevel: map.zoomLevel
     property alias shipCount: shipView.shipCount
     property alias selectionHandler: selectionHandler
+    property geoCoordinate currentMouseCoord
 
     // Any item inside refreshable should implement function refresh()
     property var refreshable: [shipView, watchView]
@@ -56,6 +57,15 @@ Item {
             target: null
             onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
             enabled: !selectionHandler.enabled
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+
+            onPositionChanged: (e) => {
+                currentMouseCoord = map.toCoordinate(Qt.point(e.x, e.y))
+            }
         }
 
         MapNotification {

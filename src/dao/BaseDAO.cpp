@@ -1,6 +1,7 @@
 #include "BaseDAO.h"
 
 #include <QSettings>
+#include <provider/DialogProvider.h>
 
 // Open a new DB connection for each key (key should be unique for each thread)
 BaseDAO::BaseDAO(const QString &key) {
@@ -31,5 +32,6 @@ BaseDAO::BaseDAO(const QString &key) {
     bool ok = m_db.open();
     if (!ok) {
         qDebug() << m_db.lastError();
+        DialogProvider::getInstance()->requestDialog(DialogProvider::Level::Fatal, m_db.lastError().text());
     }
 }

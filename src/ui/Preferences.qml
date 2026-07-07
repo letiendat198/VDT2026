@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtCore
 
+import VDT2026
+
 Dialog {
     title: qsTr("Preferences")
     standardButtons: Dialog.Save | Dialog.Cancel
@@ -123,6 +125,8 @@ Dialog {
         settings.socketPort = inputSocketPort.text
 
         settings.keyThunderforest = inputKeyThunderforest.text
+
+        DialogProvider.requestDialog(AppDialog.Level.Notice, "Please restart the app for new settings to take effect")
 
         preferencesChanged()
     }

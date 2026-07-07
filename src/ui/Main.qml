@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import VDT2026
+
 import "map"
 
 ApplicationWindow {
@@ -61,6 +63,7 @@ ApplicationWindow {
         id: statusBar
         zoomLevel: mainMap.zoomLevel
         shipCount: mainMap.shipCount
+        currentMouseCoord: mainMap.currentMouseCoord
     }
 
     MainMap {
@@ -69,5 +72,16 @@ ApplicationWindow {
 
     Preferences {
         id: preferences
+    }
+
+    AppDialog {
+        id: dialog
+
+        Connections {
+            target: DialogProvider
+            function onDialogRequested(level, body) {
+                dialog.show(level, body)
+            }
+        }
     }
 }

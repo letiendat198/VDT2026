@@ -6,23 +6,21 @@ import QtCore
 Dialog {
     enum Level {
         Notice = 0,
-        Warn = 1,
+        Warning = 1,
         Error = 2,
         Fatal = 3
     }
-    property Level level
+    property int level : 0
     property string message
 
-    title: Qt.enumValueToString(NoticeDialog.Level, level)
-    standardButtons: Dialog.OK
+    title: Qt.enumValueToString(AppDialog.Level, level)
+    standardButtons: Dialog.Ok
     modal: true
     popupType: Popup.Window
 
-    width: contentItem.childrenRect.width
-
     anchors.centerIn: Overlay.overlay
 
-    contentItem: Label {
+    Label {
         anchors.fill: parent
 
         horizontalAlignment: Label.AlignHCenter
@@ -34,6 +32,12 @@ Dialog {
         level = lv
         message = msg
 
+        console.log(Qt.enumValueToString(AppDialog.Level, level))
+
         open()
     }
+
+    onAccepted: close()
+    onDiscarded: close()
+    onRejected: close()
 }

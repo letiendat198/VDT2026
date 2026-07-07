@@ -6,6 +6,7 @@ import QtPositioning
 ToolBar {
     property int shipCount : 0
     property real zoomLevel : 0
+    property geoCoordinate currentMouseCoord
 
     anchors.right: parent.right
     anchors.left: parent.left
@@ -20,6 +21,12 @@ ToolBar {
         ToolSeparator {}
 
         Item { Layout.fillWidth: true }
+
+        ToolSeparator {}
+
+        Text {
+            text: "%1".arg(currentMouseCoord)
+        }
 
         ToolSeparator {}
 
