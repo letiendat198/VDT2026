@@ -32,14 +32,14 @@ public:
 
     void addClient(QTcpSocket*);
 private slots:
-    void onClientDisconnected(int key);
-    void onClientError(int key, QAbstractSocket::SocketError error);
-    void onClientIncoming(int key);
+    void onClientDisconnected(const QString &key);
+    void onClientError(const QString &key, QAbstractSocket::SocketError error);
+    void onClientIncoming(const QString &key);
     // TODO: Handle clear all clients when socket server closes
 
 private:
-    // Identify by server socket port, may regret it later :D
-    QMap<int, QPointer<QTcpSocket>> m_mapClient{};
+    // Identify by client address and port
+    QMap<QString, QPointer<QTcpSocket>> m_mapClient{};
 };
 
 #endif // CLIENTHANDLER_H

@@ -22,8 +22,6 @@ cfg = {
             "speed": [2000], # m/s. Random range, 1 element for fixed value
             "angleDelta": [], # Empty for fixed angle
         },
-    ]
-}
     #     {
     #         "entityCount": 1000,
     #         "interval": 1, # In seconds

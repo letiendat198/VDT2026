@@ -76,12 +76,20 @@ ApplicationWindow {
 
     AppDialog {
         id: dialog
+        onClosed: {
+            DialogProvider.popDialogQueue()
+        }
 
         Connections {
             target: DialogProvider
             function onDialogRequested(level, body) {
+                console.log("Showing dialog")
                 dialog.show(level, body)
             }
+        }
+
+        Component.onCompleted: {
+            DialogProvider.setDisplayComponentAvailable(true)
         }
     }
 }

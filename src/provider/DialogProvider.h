@@ -3,6 +3,12 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QQueue>
+
+struct DialogMessage {
+    int level;
+    QString message;
+};
 
 class DialogProvider : public QObject
 {
@@ -37,6 +43,10 @@ public:
     }
 
     Q_INVOKABLE void requestDialog(int level, const QString &body);
+    Q_INVOKABLE void setDisplayComponentAvailable(bool available);
+    Q_INVOKABLE void popDialogQueue();
+
+    void notifyDialogQueueHead();
 
     enum Level {
         Notice = 0,
@@ -46,6 +56,11 @@ public:
     };
 signals:
     void dialogRequested(int level, const QString &body);
+
+private:
+    // First item on message queue is the dialog currently displayed
+    QQueue<DialogMessage> m_messageQueue{};
+    bool m_displayComponentAvailable{};
 };
 
 #endif // DIALOGPROVIDER_H

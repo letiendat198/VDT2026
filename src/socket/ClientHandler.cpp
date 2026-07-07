@@ -13,23 +13,25 @@ void ClientHandler::addClient(QTcpSocket *socket) {
 
     // TODO: Change this to actual unique identifier
     int clientPort = socket->peerPort();
+    QString clientAddr = socket->peerAddress().toString();
+    QString key = clientAddr + ":" + QString::number(clientPort);
 
-    connect(socket, &QTcpSocket::disconnected, this, [this, clientPort](){
-        onClientDisconnected(clientPort);
+    connect(socket, &QTcpSocket::disconnected, this, [this, key](){
+        onClientDisconnected(key);
     });
 
-    connect(socket, &QTcpSocket::errorOccurred, this, [this, clientPort](QAbstractSocket::SocketError error){
-        onClientError(clientPort, error);
+    connect(socket, &QTcpSocket::errorOccurred, this, [this, key](QAbstractSocket::SocketError error){
+        onClientError(key, error);
     });
 
-    connect(socket, &QTcpSocket::readyRead, this, [this, clientPort](){
-        onClientIncoming(clientPort);
+    connect(socket, &QTcpSocket::readyRead, this, [this, key](){
+        onClientIncoming(key);
     });
 
-    m_mapClient.insert(clientPort, QPointer(socket));
+    m_mapClient.insert(key, QPointer(socket));
 }
 
-void ClientHandler::onClientIncoming(int key) {
+void ClientHandler::onClientIncoming(const QString &key) {
     // qDebug() << "Client" << key << "have something to share";
     QPointer<QTcpSocket> client = m_mapClient[key];
 
@@ -68,7 +70,8 @@ void ClientHandler::onClientIncoming(int key) {
     QThreadPool::globalInstance()->start(readRunnable);
 }
 
-void ClientHandler::onClientDisconnected(int key) {
+void ClientHandler::onClientDisconnected(const QString &key) {
+    qDebug() << "Client" << key << "disconnected";
     QPointer<QTcpSocket> client = m_mapClient.take(key);
 
     if (!client) {
@@ -81,7 +84,7 @@ void ClientHandler::onClientDisconnected(int key) {
     client->deleteLater();
 }
 
-void ClientHandler::onClientError(int key, QAbstractSocket::SocketError error) {
+void ClientHandler::onClientError(const QString &key, QAbstractSocket::SocketError error) {
     qDebug() << error;
 
     onClientDisconnected(key);

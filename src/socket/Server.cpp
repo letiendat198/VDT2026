@@ -1,13 +1,22 @@
 #include "Server.h"
 #include "socket/ClientHandler.h"
 
+#include "provider/DialogProvider.h"
+
 #include <QDebug>
 
 Server::Server(int port, QObject *parent) : m_server(parent), QObject(parent) {
     connect(&m_server, &QTcpServer::newConnection, this, &Server::onNewConnection);
     connect(&m_server, &QTcpServer::pendingConnectionAvailable, this, &Server::onPendingConnectionAvailable);
 
-    m_server.listen(QHostAddress::Any, port);
+    bool ok = m_server.listen(QHostAddress::Any, port);
+    if (!ok) {
+        qDebug() << "Failed to open socket server";
+        DialogProvider::getInstance()->requestDialog(
+            DialogProvider::Level::Fatal,
+            QString("Unable to open socket at port %1, please make sure the port is available").arg(port)
+        );
+    }
 }
 
 Server::~Server() {
