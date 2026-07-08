@@ -23,7 +23,7 @@ Item {
 
         PluginParameter {
             name: "osm.mapping.custom.host"
-            value: "https://api.thunderforest.com/atlas/%z/%x/%y.png?apikey=%1".arg(THUNDERFOREST_API_KEY) // Provided by rootContext
+            value: "https://mt.google.com/vt/lyrs=m&x=%x&y=%y&z=%z"
         }
     }
 

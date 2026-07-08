@@ -1,6 +1,6 @@
 import traceback
 
-from shapely import Point
+from shapely import Point, Polygon
 from struct import pack
 import socket
 import math
@@ -26,14 +26,20 @@ class Ship:
         self.angle = initAngle
         self.speed = initSpeed
 
-    def tick(self, duration, angleDelta):
+    def tick(self, duration, angleDelta, bound = None):
         self.angle += angleDelta
 
         distant = duration * self.speed
 
         geod = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
         d = geod.Direct(self.pos.x, self.pos.y, self.angle, distant)
-        self.pos = Point(d['lat2'], d['lon2'])
+        newPos = Point(d['lat2'], d['lon2'])
+
+        if bound and not bound.contains(newPos):
+            # print("Ship " + str(self.id) + " went out of bound, turning around")
+            self.angle = (self.angle + 180) % 360
+            return
+        self.pos = newPos
 
     def toBytes(self):
         b = pack("!qddddQ", self.id, self.pos.x, self.pos.y, self.angle, self.speed, int(time() * 1000))
@@ -125,7 +131,7 @@ def run(cluster):
                 elif angleDeltaArgs == 2:
                     angleDelta = random.randrange(cluster["angleDelta"][0], cluster["angleDelta"][1])
 
-                ship.tick(cluster["interval"], angleDelta)
+                ship.tick(cluster["interval"], angleDelta, cluster["initialBoundPolygon"])
 
             end = time()
             elapse = end - start

@@ -61,7 +61,7 @@ Item {
                 function onTapped() {
                     // var p = map.fromCoordinate(shipData.coord)
                     // infoPopup.openAt(p.x, p.y, shipData)
-                    infoPopup.openFor(mapItem, shipData)
+                    infoPopup.openFor(mapItem)
                 }
             }
         }

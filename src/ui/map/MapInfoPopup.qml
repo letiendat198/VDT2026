@@ -10,7 +10,7 @@ Popup {
 
     modal: true
     focus: true
-    width: 320
+    width: 330
     height: 200
 
     x: 10
@@ -32,11 +32,11 @@ Popup {
         open()
     }
 
-    function openFor(target: Item, d: shipRadarInfo) {
+    function openFor(target: Item) {
         x = Qt.binding(() => target.x + target.width)
         y = Qt.binding(() => target.y + target.height)
 
-        shipData = d
+        shipData = Qt.binding(() => target.shipData)
 
         open()
     }
