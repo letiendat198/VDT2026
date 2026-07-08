@@ -1,0 +1,1 @@
+rm /usr/share/applications/gisVDT.desktop

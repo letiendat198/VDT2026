@@ -59,8 +59,9 @@ Item {
             Connections {
                 target: shipIndicator.shipTapHandler
                 function onTapped() {
-                    var p = map.fromCoordinate(shipData.coord)
-                    infoPopup.openAt(p.x, p.y, shipData)
+                    // var p = map.fromCoordinate(shipData.coord)
+                    // infoPopup.openAt(p.x, p.y, shipData)
+                    infoPopup.openFor(mapItem, shipData)
                 }
             }
         }

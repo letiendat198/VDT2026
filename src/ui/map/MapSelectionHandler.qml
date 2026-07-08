@@ -91,7 +91,6 @@ Item {
                     for(var p of listPoint) {
                         listCoordinate.push(map.toCoordinate(p))
                     }
-
                     selectionFinished(listCoordinate)
                 }
             }

@@ -39,14 +39,26 @@ qt_generate_deploy_qml_app_script(TARGET appVDT2026
 
 install(SCRIPT "${QT_INSTALL_SCRIPT}")
 
-# # Install the .desktop entry - Broken
-configure_file(${CMAKE_SOURCE_DIR}/src/resources/gisVDT.desktop ${CMAKE_INSTALL_PREFIX}gisVDT.desktop)
-install(FILES ${CMAKE_INSTALL_PREFIX}gisVDT.desktop DESTINATION ~/.local/share/applications/)
+# Configure the .desktop entry to the correct path
+configure_file(${CMAKE_SOURCE_DIR}/src/resources/packaging/gisVDT.desktop ${CMAKE_INSTALL_PREFIX}configured/gisVDT.desktop)
+# Configure the script, but no need to install them because the content are written into the final spec file
+configure_file(${CMAKE_SOURCE_DIR}/src/resources/packaging/postin.sh ${CMAKE_INSTALL_PREFIX}scripts/postin.sh)
+configure_file(${CMAKE_SOURCE_DIR}/src/resources/packaging/postun.sh ${CMAKE_INSTALL_PREFIX}scripts/postun.sh)
+
+# If you want CPACK to install it correctly, use relative path only
+# DON'T USE ABSOLUTE PATH OR CPACK WILL INSTALL IT ABSOLUTELY AND WILL FUCK UP YOUR FOLDER PERMISSION
+# THERE IS CMAKE_INSTALL_PREFIX AND CPACK_PACKAGING_INSTALL_PREFIX FOR A REASON!
+install(FILES ${CMAKE_INSTALL_PREFIX}configured/gisVDT.desktop DESTINATION ".")
 
 set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "RPM")
 set(CPACK_PACKAGE_NAME "gisVDT")
-set(CPACK_DEVEL_PACKAGE_DESCRIPTION "Package for VDT 2026 Mini Project")
+set(CPACK_RPM_PACKAGE_SUMMARY "gisVDT")
+set(CPACK_RPM_PACKAGE_DESCRIPTION "Package for VDT 2026 Mini Project")
+# Use post install and post uninstall scripts feature of RPM to copy the .desktop file
+# CMake install() will tries to copy it during packaging time, which is annoying. And then there's the whole permission fiasco
+set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE ${CMAKE_INSTALL_PREFIX}scripts/postin.sh)
+set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CMAKE_INSTALL_PREFIX}scripts/postun.sh)
 set(CPACK_PACKAGE_RELEASE 1)
 set(CPACK_PACKAGE_CONTACT "Le Tien Dat")
 set(CPACK_PACKAGE_VENDOR "Le Tien Dat")

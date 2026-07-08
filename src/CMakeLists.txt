@@ -34,7 +34,7 @@ qt_add_qml_module(appVDT2026
         model/WatchPolygonModel.h model/WatchPolygonModel.cpp
         provider/WatchPolygonProvider.h provider/WatchPolygonProvider.cpp
         ui/model/ShipRadarInfoItemModel.h ui/model/ShipRadarInfoItemModel.cpp
-        provider/DialogProvider.h provider/DialogProvider.cpp
+        provider/DialogProvider.h provider/DialogProvider.cpp 
 )
 
 qt_add_resources(appVDT2026 "images"
@@ -42,7 +42,6 @@ qt_add_resources(appVDT2026 "images"
         FILES
              resources/marker.svg
              resources/marker_highlighted.svg
-             resources/gisVDT.desktop
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -3,7 +3,6 @@ Version=1.0
 Type=Application
 Name=GisVDT
 Comment=Mini project for VDT
-Icon=steam_icon_504230
 Exec=${PACKAGE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${BINARY_NAME}
 Keywords=vdt;gis;
 StartupNotify=true

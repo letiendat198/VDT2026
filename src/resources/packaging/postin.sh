@@ -1,0 +1,1 @@
+cp ${PACKAGE_INSTALL_PREFIX}/gisVDT.desktop /usr/share/applications/gisVDT.desktop

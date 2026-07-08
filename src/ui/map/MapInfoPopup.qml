@@ -32,6 +32,15 @@ Popup {
         open()
     }
 
+    function openFor(target: Item, d: shipRadarInfo) {
+        x = Qt.binding(() => target.x + target.width)
+        y = Qt.binding(() => target.y + target.height)
+
+        shipData = d
+
+        open()
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
