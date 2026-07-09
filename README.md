@@ -18,7 +18,7 @@
     - ~~Notification queue~~
     - ~~Cho phép sửa cài đặt postgres để còn package~~
     - ~~Package~~
-    - ~~Fix memory leak~~ (Không có memory leak ở Ba Sing Se...) (But fr ko hiểu sao trước đó memory cứ tăng dần, giờ lại bình thường) 
+    - ~~Fix memory leak~~
     - ~~Error popup~~
     - ~~Catch socket init error~~
     - ~~Fix lỗi mỗi lần read dùng 1 thread, không dùng lại db được~~
